@@ -79,15 +79,6 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         var result = 0
         try {
             // クエリ
-//            val cursor = db.query(
-//                DBContract.DataEntry.TABLE_NAME,
-//                null,
-//                SQL_COUNT_TODOS,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null)
             val cursor = db.rawQuery(SQL_COUNT_TODOS, null)
             cursor.moveToFirst()
             result = cursor.getInt(cursor.getColumnIndex("cnt"))
@@ -129,6 +120,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
         /**
          * TODOの内容を取得(降順)
+         * TODO 消すかも？
          */
         private const val SQL_SELECT_TODOS =  "SELECT " +
                 DBContract.DataEntry.TODO_NAME +

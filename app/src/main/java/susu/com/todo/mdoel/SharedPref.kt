@@ -15,8 +15,7 @@ class SharedPref(context: Context) {
 
     private val appPref: SharedPreferences = context.getSharedPreferences("app_pref", Context.MODE_PRIVATE)
 
-    // hoge や todoListItemへの読み書きがそのまま SharedPreferences への読み書きになる
-//    var hoge: Int by pref(default = 0)
+    // todoListItemへの読み書きがそのまま SharedPreferences への読み書きになる
     var todoListItem: String? by nullablePref()
 
     /**

@@ -16,6 +16,7 @@ class InputTextDialog( mc: Context) {
     // テキスト入力用のダイアログ
     private val mDialog = MyDialog()
     init {
+        // TODO エンター押下で改行を防止
         mDialog.mEdit =  EditText(mc)
     }
 

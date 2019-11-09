@@ -1,11 +1,7 @@
 package susu.com.todo.view
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.SharedPreferences
-import android.media.Image
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +15,6 @@ class TodoListAdapter(private val context: Context,
                       private val sortedList: Array<String>) : BaseAdapter() {
 
     private val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    lateinit var prefs : SharedPreferences
 
     override fun getCount(): Int {
         return sortedList.count()

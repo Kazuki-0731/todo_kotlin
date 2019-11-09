@@ -17,7 +17,6 @@ import android.view.animation.DecelerateInterpolator
 import kotlinx.android.synthetic.main.activity_main.*
 import susu.com.todo.mdoel.DBHelper
 import susu.com.todo.mdoel.DataModel
-import susu.com.todo.mdoel.SharedPref
 import susu.com.todo.view.InputTextDialog
 import susu.com.todo.view.TodoFragment
 
@@ -42,7 +41,7 @@ import susu.com.todo.view.TodoFragment
  * inactiveとは、横線を付ける
  * activeとは、横線を外す
  *
- * sharedPreferenceでデータ保存
+ * SQLiteOpenHelperの拡張カスタムクラスでデータ保存
  *
  * TODO アプリアイコン変えたい(希望)
  */
@@ -71,10 +70,6 @@ class MainActivity : AppCompatActivity() {
 
         // Todoフラグメント初期化
         todoFragment = TodoFragment()
-
-        // 辞書クラス初期化
-        var shaPref = SharedPref(this)
-//        shaPref.todoListItem = "Kotlin,Android,iOS,Swift,Java"
 
         // DBHelperクラス初期化
         val dbhelper = DBHelper(this)
@@ -110,16 +105,14 @@ class MainActivity : AppCompatActivity() {
             // OKボタン
             dialog.onOkClickListener = DialogInterface.OnClickListener { _, _->
                 // TODO 文字列が20文字以下のValidationを設ける?
+                // TODO 正規表現でフィルターかけたい
                 // 入力テキストを保存
                 val textData = dialog.dialogTextData
-                var shaPref = SharedPref(context)
-                shaPref.todoListItem = shaPref.todoListItem.plus(",").plus(textData)
 
                 // DBに保存
                 // TODO 最後のID取得
                 val todoRecord = DataModel(
                     dbhelper.getCountID(),
-//                    0,
                     textData,
                     0 // 初期値を0とする
                 )
@@ -137,7 +130,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 // ListViewリロード
-//                todoFragment.reload(context, shaPref)
                 todoFragment.reload(context, dbhelper)
 
                 // 逆回転
