@@ -11,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 
@@ -27,7 +28,7 @@ import susu.com.todo.view.TodoFragment
  *
  * validationを設ける
  * 絵文字、半角全角入力可能(文字数のみ)
- * 文字数は最大20文字程度(それ以上だと画面の横幅を超えてしまう)
+ * 文字数は最大10文字程度(それ以上だと画面の横幅を超えてしまう)
  *
  * 文字数を超える場合はアラート表示
  *
@@ -104,39 +105,92 @@ class MainActivity : AppCompatActivity() {
             dialog.dialogTextData = ""
             // OKボタン
             dialog.onOkClickListener = DialogInterface.OnClickListener { _, _->
-                // TODO 文字列が20文字以下のValidationを設ける?
+                // TODO 文字列が10文字以下のValidationを設ける?
                 // TODO 正規表現でフィルターかけたい
                 // 入力テキストを保存
                 val textData = dialog.dialogTextData
 
-                // DBに保存
-                // TODO 最後のID取得
-                val todoRecord = DataModel(
-                    dbhelper.getCountID(),
-                    textData,
-                    0 // 初期値を0とする
-                )
-
-                // 挿入
-                val result = dbhelper.insertTODO(todoRecord)
-
-                // 保存成功
-                if(result){
-                    // 通知
-                    Snackbar.make(view,"$textData をTODOリストへ追加しました", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show()
+                // 文字数が10文字以上なのか判定
+                if(textData.length > 10){
+                    // ダイアログを閉じない
+                    dialog.overInputLimit = true
+                    dialog.dialogMessage = "10文字以下で入力してください"
                 } else {
-                    // 保存失敗
-                }
+                    // DBに保存
+                    // TODO 最後のID取得
+                    val todoRecord = DataModel(
+                        dbhelper.getCountID(),
+                        textData,
+                        0 // 初期値を0とする
+                    )
 
-                // ListViewリロード
-                todoFragment.reload(context, dbhelper)
+                    // 挿入
+                    val result = dbhelper.insertTODO(todoRecord)
 
-                // 逆回転
-                if (state == FloatingActionState.ANIMATED && !closingAnimation.isRunning) {
-                    closeFloatingActionFragment()
+                    // 保存成功
+                    if(result){
+                        // 通知
+                        Snackbar.make(view,"$textData をTODOリストへ追加しました", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show()
+                    } else {
+                        // 保存失敗
+                    }
+
+                    // ListViewリロード
+                    todoFragment.reload(context, dbhelper)
+
+                    // 逆回転
+                    if (state == FloatingActionState.ANIMATED && !closingAnimation.isRunning) {
+                        closeFloatingActionFragment()
+                    }
                 }
             }
+
+            dialog.onOkButtonClickListener = View.OnClickListener {
+                // TODO 文字列が10文字以下のValidationを設ける?
+                // TODO 正規表現でフィルターかけたい
+                // 入力テキストを保存
+                val textData = dialog.dialogTextData
+
+                // 文字数が10文字以上なのか判定
+                if(textData.length > 10){
+                    // ダイアログを閉じない
+                    dialog.overInputLimit = true
+                    dialog.dialogMessage = "10文字以下で入力してください"
+                } else {
+                    // DBに保存
+                    // TODO 最後のID取得
+                    val todoRecord = DataModel(
+                        dbhelper.getCountID(),
+                        textData,
+                        0 // 初期値を0とする
+                    )
+
+                    // 挿入
+                    val result = dbhelper.insertTODO(todoRecord)
+
+                    // 保存成功
+                    if(result){
+                        // 通知
+                        Snackbar.make(view,"$textData をTODOリストへ追加しました", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show()
+                    } else {
+                        // 保存失敗
+                    }
+
+                    // ListViewリロード
+                    todoFragment.reload(context, dbhelper)
+
+                    // 逆回転
+                    if (state == FloatingActionState.ANIMATED && !closingAnimation.isRunning) {
+                        closeFloatingActionFragment()
+                    }
+
+                    // Dialogを閉じる
+                    dialog.dialogDismiss()
+                }
+            }
+
             // キャンセルボタン
             dialog.onCancelClickListener = DialogInterface.OnClickListener { _, _ ->
                 // 逆回転

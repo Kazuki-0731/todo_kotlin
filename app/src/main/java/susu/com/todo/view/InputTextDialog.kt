@@ -5,6 +5,8 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
@@ -63,7 +65,7 @@ class InputTextDialog( mc: Context) {
         }
         set(value) {
             mDialog.isOkButton = true
-            mDialog.onOkClickListener = value
+//            mDialog.onOkClickListener = value
         }
     /**
      * キャンセルボタンを利用するのか
@@ -87,6 +89,33 @@ class InputTextDialog( mc: Context) {
             mDialog.isCancelButton = true
             mDialog.onCancelClickListener = value
         }
+    /**
+     * 入力が最大を超えているのかフラグ
+     */
+    var overInputLimit : Boolean
+        get() {
+            return mDialog.overInputLimit
+        }
+        set(value) {
+            mDialog.overInputLimit = value
+        }
+
+    /**
+     * カスタムされたOKボタンの処理
+     */
+    var onOkButtonClickListener : View.OnClickListener
+        get() {
+            // 実際には使用しない
+            return View.OnClickListener {  }
+        }
+        set(value) {
+            mDialog.isOkButton = true
+            mDialog.onOkButtonClickListener = value
+        }
+
+    fun dialogDismiss(){
+        mDialog.diagDismiss()
+    }
 
     /**
      * ダイアログの表示
@@ -105,9 +134,12 @@ class InputTextDialog( mc: Context) {
         var mEdit : EditText? = null
         var mTextData : String = ""
         var isOkButton : Boolean = false
-        var onOkClickListener      : DialogInterface.OnClickListener = DialogInterface.OnClickListener {_, _ -> }
+//        var onOkClickListener : DialogInterface.OnClickListener = DialogInterface.OnClickListener {_, _ -> }
         var isCancelButton : Boolean = false
         var onCancelClickListener : DialogInterface.OnClickListener = DialogInterface.OnClickListener { _, _ -> }
+        var overInputLimit : Boolean = false
+
+        var onOkButtonClickListener : View.OnClickListener = View.OnClickListener {  }
 
         /**
          * Dialog生成
@@ -120,28 +152,42 @@ class InputTextDialog( mc: Context) {
             if (mTitle.isNotEmpty()) {
                 dialogBuilder.setTitle(mTitle)
             } else {
-                dialogBuilder.setTitle("TODO入力")
+                dialogBuilder.setTitle("テキスト入力")
             }
             // 小見出し
             if (mMsg.isNotEmpty()) {
                 dialogBuilder.setMessage(mMsg)
+            } else {
+                dialogBuilder.setMessage("TODO項目を入力してください")
             }
             // 入力ボックス
             mEdit?.setText( mTextData )
             dialogBuilder.setView(mEdit)
             //OKボタン有無
             if (isOkButton) {
-                dialogBuilder.setPositiveButton(getString(android.R.string.ok), onOkClickListener)
+                // OKボタン押下時にValidationを設けるため、DialogクラスのOKボタンの閉じる処理を切り離すためにnullを入れた
+                dialogBuilder.setPositiveButton(getString(android.R.string.ok), null)
             }
             // キャンセルボタン有無
             if (isCancelButton) {
                 dialogBuilder.setNegativeButton(getString(android.R.string.cancel), onCancelClickListener)
             }
-            return dialogBuilder.create()
+
+            // OKボタンオブジェクト取得
+            val malertDiag : AlertDialog = dialogBuilder.show()
+            val okButton : Button = malertDiag.getButton(DialogInterface.BUTTON_POSITIVE)
+            okButton.setOnClickListener(onOkButtonClickListener)
+
+            return malertDiag
         }
+
         // onPause でダイアログを閉じている
         override fun onPause() {
             super.onPause()
+            dismiss()
+        }
+
+        fun diagDismiss(){
             dismiss()
         }
     }

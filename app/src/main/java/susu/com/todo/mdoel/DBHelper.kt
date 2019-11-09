@@ -61,7 +61,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                 Log.d("debug", "todo_name : " + cursor.getString(0))
             }
         } catch (e: Exception) {
-            // TODO エラー内容をLog出力
+            // エラー内容をLog出力
             Log.d("debug", "select Error")
             Log.d("debug", e.message)
         } finally {
@@ -83,7 +83,9 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             cursor.moveToFirst()
             result = cursor.getInt(cursor.getColumnIndex("cnt"))
         } catch (e: Exception) {
-            // TODO エラー時の処理内容を決める
+            // エラー内容をLog出力
+            Log.d("debug", "select Error")
+            Log.d("debug", e.message)
         } finally {
             // 閉じる
             db.close()
