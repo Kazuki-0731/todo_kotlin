@@ -36,3 +36,11 @@ Kotlinで制作したTODOアプリです
   * Inactiveになると文字列に横線がはいります
 * 右側のアイコン押下で１行削除します
   * 削除されると画面がリロードします
+
+## [実際の画面]
+### 入力画面
+<img src="https://user-images.githubusercontent.com/28224709/68528488-ac2d7900-0336-11ea-8595-c91f3d7a8008.jpg" width="30%">
+
+### データ挿入後
+<img src="https://user-images.githubusercontent.com/28224709/68528493-b18ac380-0336-11ea-97f5-2324d672f3ea.jpg" width="30%">
+
