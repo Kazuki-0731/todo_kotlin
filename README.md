@@ -9,9 +9,9 @@ Kotlinで制作したTODOアプリです
 * データの追加は、右下のアイコン押下でTODO追加します。
 
 ## [主な仕様]
-* 最大TODOの件数
+* TODOリストに登録可能な最大件数
   * 100件
-* 最大入力文字列
+* 最大入力文字数
   * 10文字
 * 入力できる有効文字列
   * 全角半角英字
@@ -44,9 +44,9 @@ Kotlinで制作したTODOアプリです
 ### データ挿入後
 <img src="https://user-images.githubusercontent.com/28224709/68528493-b18ac380-0336-11ea-97f5-2324d672f3ea.jpg" width="30%">
 
-### 入力可能文字を超えた場合
+### 最大入力文字数を超えた場合
 <img src="https://user-images.githubusercontent.com/28224709/68540504-88ba0b00-03d6-11ea-9e80-965d14e10f6e.jpg" width="30%">
 
-### 登録できる件数を超えた場合
+### TODOリストに登録可能な最大件数を超えた場合
 <img src="https://user-images.githubusercontent.com/28224709/68540496-6cb66980-03d6-11ea-98b6-6c1dc9edb11d.jpg" width="30%">
 
