@@ -1,4 +1,4 @@
-package susu.com.todo.view.fragment.util
+package susu.com.todo.view.util
 
 import android.app.AlertDialog
 import android.app.Dialog

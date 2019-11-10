@@ -18,7 +18,8 @@ import android.view.animation.DecelerateInterpolator
 import kotlinx.android.synthetic.main.activity_main.*
 import susu.com.todo.mdoel.database.DBHelper
 import susu.com.todo.mdoel.entities.DataModel
-import susu.com.todo.view.fragment.util.InputTextDialog
+import susu.com.todo.view.common.FrontConst
+import susu.com.todo.view.util.InputTextDialog
 import susu.com.todo.view.fragment.TodoFragment
 
 /**
@@ -43,8 +44,6 @@ import susu.com.todo.view.fragment.TodoFragment
  * activeとは、横線を外す
  *
  * SQLiteOpenHelperの拡張カスタムクラスでデータ保存
- *
- * TODO アプリアイコン変えたい(希望)
  */
 class MainActivity : AppCompatActivity() {
 //    private var dataModel = DataModel("")
@@ -108,12 +107,18 @@ class MainActivity : AppCompatActivity() {
                 // 入力テキストを保持
                 val textData = dialog.dialogTextData
 
-                // DBの保存できる上限なのかチェック
-                if(dbhelper.getCountID() >= 100){
+                /**
+                 * DBの保存できる上限なのかチェック
+                 * 100件目まで登録可能
+                 * 101件からは登録できない
+                 */
+                if(dbhelper.getCountID() >= FrontConst.Limit.LISTVIEW_REGIST_LIMIT.value){
                     // ダイアログを閉じないで新規ダイアログ表示
                     val warningDialog = InputTextDialog(context)
                     warningDialog.dialogTitle = "⚠️ 警告 ⚠️"
-                    warningDialog.dialogMessage = "最大登録件数を超えるため、１件以上削除してください"
+                    warningDialog.dialogMessage = "最大登録件数(" +
+                            FrontConst.Limit.LISTVIEW_REGIST_LIMIT.value +
+                            ")を超えるため、１件以上削除してください"
                     warningDialog.editText = null
                     warningDialog.onOkClickListener = DialogInterface.OnClickListener { _, _->}
                     warningDialog.isOkButton = true
@@ -121,13 +126,20 @@ class MainActivity : AppCompatActivity() {
                     // ダイアログ表示
                     warningDialog.openDialog(supportFragmentManager)
                 } else {
-                    // 文字数が10文字以上なのか判定
-                    if(textData.length > 10){
+                    /**
+                     * 文字数判定
+                     * あまりにも文字が長いと見栄えが悪いため
+                     * 50文字まで入力可能
+                     * 51文字目からは入力できない仕様
+                     * 逆に短すぎるとTODOとしての機能を果たせないため、ある程度余裕を持たせている
+                     */
+                    if(textData.length > FrontConst.Limit.UPPER_LIMIT_OF_INPUT_VALUE.value){
                         // ダイアログを閉じないで新規ダイアログ表示
-                        val warningDialog =
-                            InputTextDialog(context)
+                        val warningDialog = InputTextDialog(context)
                         warningDialog.dialogTitle = "⚠️ 警告 ⚠️"
-                        warningDialog.dialogMessage = "最大文字数を超えるため、10文字以下で入力してください"
+                        warningDialog.dialogMessage = "最大文字数を超えるため、" +
+                                FrontConst.Limit.UPPER_LIMIT_OF_INPUT_VALUE.value +
+                                "文字以下で入力してください"
                         warningDialog.editText = null
                         warningDialog.onOkClickListener = DialogInterface.OnClickListener { _, _->}
                         warningDialog.isOkButton = true
@@ -139,7 +151,7 @@ class MainActivity : AppCompatActivity() {
                         val todoRecord = DataModel(
                             dbhelper.getCountID(),
                             textData,
-                            0 // 初期値をInactive(0)とする
+                            FrontConst.Init.INITIAL_VALUE_OF_STATUS_WHEN_TODO_IS_ADDED.value // 初期値をInactive(0)とする
                         )
                         // 挿入
                         dbhelper.insertTODO(todoRecord)

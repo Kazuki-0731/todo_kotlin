@@ -3,7 +3,7 @@ package susu.com.todo.mdoel.database
 import android.provider.BaseColumns
 
 // DBの情報管理
-object DBContract {
+object DBConstruct {
     enum class CheckStatus(val status : Int) {
         ACTIVE(0),
         INACTIVE(1)

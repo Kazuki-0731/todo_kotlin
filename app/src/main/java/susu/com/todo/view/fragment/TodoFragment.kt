@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.content_main.*
 import susu.com.todo.R
 import susu.com.todo.mdoel.database.DBHelper
-import susu.com.todo.view.fragment.util.TodoListAdapter
+import susu.com.todo.view.util.TodoListAdapter
 
 /**
  * ListViewのFragment

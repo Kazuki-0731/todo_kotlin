@@ -1,4 +1,4 @@
-package susu.com.todo.view.fragment.util
+package susu.com.todo.view.util
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,7 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import susu.com.todo.R
-import susu.com.todo.mdoel.database.DBContract
+import susu.com.todo.mdoel.database.DBConstruct
 import susu.com.todo.mdoel.database.DBHelper
 import susu.com.todo.view.fragment.TodoFragment
 
@@ -56,10 +56,10 @@ class TodoListAdapter(private val context: Context,
             // 元々のStateを取得
             val targetStatus = dbhelper.getStatus(allIdList[position])
             // DBのstatus判定し、現在とは反対の値を格納
-            if(DBContract.CheckStatus.INACTIVE.status == targetStatus){
-                dbhelper.updateState(allIdList[position], DBContract.CheckStatus.ACTIVE.status.toString())
-            } else if(DBContract.CheckStatus.ACTIVE.status == targetStatus){
-                dbhelper.updateState(allIdList[position], DBContract.CheckStatus.INACTIVE.status.toString())
+            if(DBConstruct.CheckStatus.INACTIVE.status == targetStatus){
+                dbhelper.updateState(allIdList[position], DBConstruct.CheckStatus.ACTIVE.status.toString())
+            } else if(DBConstruct.CheckStatus.ACTIVE.status == targetStatus){
+                dbhelper.updateState(allIdList[position], DBConstruct.CheckStatus.INACTIVE.status.toString())
             }
             // listViewリロード
             fragment.reload(context, dbhelper)
@@ -110,12 +110,12 @@ class TodoListAdapter(private val context: Context,
         // 元々のStateを取得
         val targetStatus = dbhelper.getStatus(allIdList[position])
         // DBのstatus判定
-        if(DBContract.CheckStatus.INACTIVE.status == targetStatus){
+        if(DBConstruct.CheckStatus.INACTIVE.status == targetStatus){
             // Off -> On
             imageCheck.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_check_box_black_24dp, null))
             // 文字に横線
             todoText.inactiveLine()
-        } else if(DBContract.CheckStatus.ACTIVE.status == targetStatus){
+        } else if(DBConstruct.CheckStatus.ACTIVE.status == targetStatus){
             // On -> Off
             imageCheck.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_check_box_outline_blank_black_24dp, null))
             // 文字に横線解除
