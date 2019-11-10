@@ -14,13 +14,14 @@ import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import susu.com.todo.R
+import susu.com.todo.mdoel.DBContract
 import susu.com.todo.mdoel.DBHelper
 
 class TodoListAdapter(private val context: Context,
                       private val sortedList: Array<String>,
                       private val fragment: TodoFragment
 ) : BaseAdapter() {
-
+    // レイアウトオブジェクト
     private val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int {
@@ -51,18 +52,31 @@ class TodoListAdapter(private val context: Context,
          *
          * inactice -> active
          * この時に文字の横線を解除
-         *
          */
         val imageCheck = view.findViewById<ImageView>(R.id.image_check)
         imageCheck.setOnClickListener{
-            imageCheck.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_check_box_black_24dp, null))
+            // DBオブジェクト生成
+            val dbhelper = DBHelper(context)
+            // ListViewのositionから、レコードIDを取得
+            val allIdList = dbhelper.getAllID()
+            // 元々のStateを取得
+            val targetStatus = dbhelper.getStatus(allIdList[position])
+            // DBのstatus判定
+            if(DBContract.CheckStatus.INACTIVE.status == targetStatus){
+                // Off -> On
+                imageCheck.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_check_box_black_24dp, null))
+                dbhelper.updateState(allIdList[position], DBContract.CheckStatus.ACTIVE.status.toString())
+            } else if(DBContract.CheckStatus.ACTIVE.status == targetStatus){
+                // On -> Off
+                imageCheck.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_check_box_outline_blank_black_24dp, null))
+                dbhelper.updateState(allIdList[position], DBContract.CheckStatus.INACTIVE.status.toString())
+            }
         }
 
         /**
          * ゴミ箱アイコン
          * このアイコンクリックで１行削除する
          */
-        //image_delete
         val imageDelete = view.findViewById<ImageView>(R.id.image_delete)
         imageDelete.setOnClickListener{
             // ダイアログを閉じないで新規ダイアログ表示
@@ -71,11 +85,13 @@ class TodoListAdapter(private val context: Context,
             warningDialog.dialogMessage = "削除してもよろしいでしょうか？"
             warningDialog.editText = null
             warningDialog.onOkClickListener = DialogInterface.OnClickListener { _, _->
-                // DB初期化
+                // DBオブジェクト生成
                 val dbhelper = DBHelper(context)
-                // 削除実行
-                dbhelper.deleteRecord(position)
-                // リロード
+                // ListViewのositionから、レコードIDを取得
+                val allIdList = dbhelper.getAllID()
+                // 対象レコードの削除実行
+                dbhelper.deleteRecord(allIdList[position])
+                // listViewリロード
                 fragment.reload(context, dbhelper)
             }
             warningDialog.isCancelButton = true
@@ -85,11 +101,5 @@ class TodoListAdapter(private val context: Context,
 
         // 返却
         return view
-    }
-
-    // TODO あとで消す
-    // 末尾に追加
-    fun add(item:String) {
-        this.sortedList.plus(item)
     }
 }

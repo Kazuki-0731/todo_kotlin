@@ -29,23 +29,14 @@ class TodoFragment  : Fragment() {
         var dataArray: Array<String> = arrayOf()
         // DB初期化
         val dbhelper = DBHelper(activity!!.applicationContext)
-
         // DBから取得
         if(dbhelper.getCountID() != 0){
             dataArray = dbhelper.selectTODO()
         }
-
         // Adapter生成
         adapter = TodoListAdapter(activity!!.applicationContext, dataArray, this)
         // listViewに代入
         listView.adapter = adapter
-
-        // 削除ボタン押下時
-
-        // 挿入
-
-        // 取り出し
-
     }
 
     /**

@@ -4,6 +4,11 @@ import android.provider.BaseColumns
 
 // DBの情報管理
 object DBContract {
+    enum class CheckStatus(val status : Int) {
+        ACTIVE(0),
+        INACTIVE(1)
+    }
+
     // テーブル情報
     class DataEntry : BaseColumns {
         companion object {

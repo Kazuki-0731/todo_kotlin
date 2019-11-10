@@ -10,13 +10,6 @@ import java.lang.Exception
 
 /**
  * SQLiteOpenHelperの拡張クラス
- * TODO idがどこまで最大長なのか知る必要ある
- * -> これによっては、ListViewで表示するmaxが決まる
- * また、Validationも決まる
- *
- * TODO Stringの最大長も調べる
- * -> 表示の最大
- * また、Validationも決まる
  */
 class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     @Throws(SQLiteException::class)
@@ -40,7 +33,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     /**
-     * 全レコード取得(降順)
+     * 全レコード取得(昇順)
      */
     fun selectTODO() : Array<String> {
         val db = writableDatabase
@@ -96,16 +89,95 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     /**
-     * １レコード削除
+     * IDの一覧を昇順で取得
      */
-    fun deleteRecord(id : Int) {
+    fun getAllID() : Array<String> {
+        val db = writableDatabase
+        var mutableList : MutableList<String> = mutableListOf()
+        try {
+            // クエリ
+            val cursor = db.query(
+                DBContract.DataEntry.TABLE_NAME,
+                arrayOf(DBContract.DataEntry.ID),
+                null,
+                null,
+                null,
+                null,
+                DBContract.DataEntry.ID + " ASC",
+                null)
+
+            // 全データ配列化
+            while (cursor.moveToNext()) {
+                mutableList.add(cursor.getString(0))
+                Log.d("debug", "id : " + cursor.getString(0))
+            }
+        } catch (e: Exception) {
+            // エラー内容をLog出力
+            Log.d("debug", "select Error")
+            Log.d("debug", e.message)
+        } finally {
+            // 閉じる
+            db.close()
+        }
+        return mutableList.toTypedArray()
+    }
+
+    /**
+     * Stateの一覧をIDの昇順で取得
+     */
+    fun getStatus(status : String) : Int {
         val db = writableDatabase
         var result = 0
         try {
             // クエリ
+            val cursor = db.rawQuery(SQL_STATUS_TODOS, arrayOf(status))
+            cursor.moveToFirst()
+            result = cursor.getInt(cursor.getColumnIndex(DBContract.DataEntry.STATUS))
+        } catch (e: Exception) {
+            // エラー内容をLog出力
+            Log.d("debug", "select Error")
+            Log.d("debug", e.message)
+        } finally {
+            // 閉じる
+            db.close()
+        }
+        return result
+    }
+
+    /**
+     * 対象レコードのStateを変更
+     * update(DB_TABLE_NAME, values, "type=? AND date=? ", arrayOf(type.toString(),day.toString()))
+     */
+    fun updateState(id:String, status:String){
+        val db = writableDatabase
+        try {
+            val values = ContentValues()
+            values.put(DBContract.DataEntry.STATUS,status)
+            // クエリ
+            db.update(DBContract.DataEntry.TABLE_NAME,
+                values,
+                DBContract.DataEntry.ID + " = ?",
+                arrayOf(id))
+        } catch (e: Exception) {
+            // エラー内容をLog出力
+            Log.d("debug", "select Error")
+            Log.d("debug", e.message)
+        } finally {
+            // 閉じる
+            db.close()
+        }
+    }
+
+    /**
+     * １レコード削除
+     */
+    fun deleteRecord(id : String) {
+        val db = writableDatabase
+        try {
+            // クエリ
             db.delete(DBContract.DataEntry.TABLE_NAME,
                 DBContract.DataEntry.ID + " = ?",
-                arrayOf(id.toString()))
+                arrayOf(id))
         } catch (e: Exception) {
             // エラー内容をLog出力
             Log.d("debug", "delete Error")
@@ -142,31 +214,19 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                     DBContract.DataEntry.ID + " INTEGER ," +
                     DBContract.DataEntry.TODO_NAME + " TEXT ," +
                     DBContract.DataEntry.STATUS + " INTEGER)"
-
-        /**
-         * TODOの内容を取得(降順)
-         * TODO 消すかも？
-         */
-        private const val SQL_SELECT_TODOS =  "SELECT " +
-                DBContract.DataEntry.TODO_NAME +
-                " FROM " + DBContract.DataEntry.TABLE_NAME
-
         /**
          * idをcountしてレコード数を取得
          */
         private const val SQL_COUNT_TODOS =  "SELECT " +
                 "count(" + DBContract.DataEntry.ID + ") as cnt" +
                 " FROM " + DBContract.DataEntry.TABLE_NAME
-
-        //TODO あとで削除
-//
-//        /**
-//         * idを指定して対象レコードを削除
-//         */
-//        private const val SQL_DELETE_COLUMN_TODOS =  "DELETE " +
-//                " FROM " + DBContract.DataEntry.TABLE_NAME +
-//                " WHERE " + DBContract.DataEntry.ID + " = "
-
+        /**
+         * idを指定して対象レコードのStatusを取得
+         */
+        private const val SQL_STATUS_TODOS =  "SELECT " +
+                DBContract.DataEntry.STATUS +
+                " FROM " + DBContract.DataEntry.TABLE_NAME +
+                " WHERE " + DBContract.DataEntry.ID + " = ?"
         /**
          * 削除
          */
