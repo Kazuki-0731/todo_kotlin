@@ -1,10 +1,9 @@
 package susu.com.todo.view
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
-import android.util.Log
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.Fragment
 import susu.com.todo.R
 import susu.com.todo.mdoel.DBContract
 import susu.com.todo.mdoel.DBHelper
@@ -21,7 +19,6 @@ class TodoListAdapter(private val context: Context,
                       private val sortedList: Array<String>,
                       private val fragment: TodoFragment
 ) : BaseAdapter() {
-    // レイアウトオブジェクト
     private val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int {
@@ -47,11 +44,7 @@ class TodoListAdapter(private val context: Context,
 
         /**
          * チェックボックス押下時
-         * actice -> inactive
-         * この時に文字に横線を引く
-         *
-         * inactice -> active
-         * この時に文字の横線を解除
+         * DBに現在とは反対の状態を保存する
          */
         val imageCheck = view.findViewById<ImageView>(R.id.image_check)
         imageCheck.setOnClickListener{
@@ -61,16 +54,14 @@ class TodoListAdapter(private val context: Context,
             val allIdList = dbhelper.getAllID()
             // 元々のStateを取得
             val targetStatus = dbhelper.getStatus(allIdList[position])
-            // DBのstatus判定
+            // DBのstatus判定し、現在とは反対の値を格納
             if(DBContract.CheckStatus.INACTIVE.status == targetStatus){
-                // Off -> On
-                imageCheck.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_check_box_black_24dp, null))
                 dbhelper.updateState(allIdList[position], DBContract.CheckStatus.ACTIVE.status.toString())
             } else if(DBContract.CheckStatus.ACTIVE.status == targetStatus){
-                // On -> Off
-                imageCheck.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_check_box_outline_blank_black_24dp, null))
                 dbhelper.updateState(allIdList[position], DBContract.CheckStatus.INACTIVE.status.toString())
             }
+            // listViewリロード
+            fragment.reload(context, dbhelper)
         }
 
         /**
@@ -81,7 +72,7 @@ class TodoListAdapter(private val context: Context,
         imageDelete.setOnClickListener{
             // ダイアログを閉じないで新規ダイアログ表示
             val warningDialog = InputTextDialog(context)
-            warningDialog.dialogTitle = "▲ 警告 ▲"
+            warningDialog.dialogTitle = "⚠️ 警告 ⚠️"
             warningDialog.dialogMessage = "削除してもよろしいでしょうか？"
             warningDialog.editText = null
             warningDialog.onOkClickListener = DialogInterface.OnClickListener { _, _->
@@ -99,7 +90,49 @@ class TodoListAdapter(private val context: Context,
             warningDialog.openDialog(fragment.fragmentManager!!)
         }
 
+        /**
+         * DBから値を取得し横線を付ける
+         * これは画面描画時に行う
+         *
+         * actice -> inactive
+         * チェックボックスをOn
+         * 文字に横線を引く
+         *
+         * inactice -> active
+         * チェックボックスをOff
+         * この時に文字の横線を解除
+         */
+        // DBオブジェクト生成
+        val dbhelper = DBHelper(context)
+        // ListViewのpositionから、レコードIDを取得
+        val allIdList = dbhelper.getAllID()
+        // 元々のStateを取得
+        val targetStatus = dbhelper.getStatus(allIdList[position])
+        // DBのstatus判定
+        if(DBContract.CheckStatus.INACTIVE.status == targetStatus){
+            // Off -> On
+            imageCheck.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_check_box_black_24dp, null))
+            // 文字に横線
+            todoText.inactiveLine()
+        } else if(DBContract.CheckStatus.ACTIVE.status == targetStatus){
+            // On -> Off
+            imageCheck.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_check_box_outline_blank_black_24dp, null))
+            // 文字に横線解除
+            todoText.activeLine()
+        }
         // 返却
         return view
+    }
+
+    // TexgtViewに横線
+    private fun TextView.inactiveLine() {
+        paint.flags = paint.flags or Paint.STRIKE_THRU_TEXT_FLAG
+        paint.isAntiAlias = true
+    }
+
+    // TextViewの横線解除
+    fun TextView.activeLine() {
+        paint.flags = paint.flags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+        paint.isAntiAlias = true
     }
 }

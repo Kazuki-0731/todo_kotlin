@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                 if(dbhelper.getCountID() >= 100){
                     // ダイアログを閉じないで新規ダイアログ表示
                     val warningDialog = InputTextDialog(context)
-                    warningDialog.dialogTitle = "▲ 警告 ▲"
+                    warningDialog.dialogTitle = "⚠️ 警告 ⚠️"
                     warningDialog.dialogMessage = "最大登録件数を超えるため、１件以上削除してください"
                     warningDialog.editText = null
                     warningDialog.onOkClickListener = DialogInterface.OnClickListener { _, _->}
@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity() {
                     if(textData.length > 10){
                         // ダイアログを閉じないで新規ダイアログ表示
                         val warningDialog = InputTextDialog(context)
-                        warningDialog.dialogTitle = "▲ 警告 ▲"
+                        warningDialog.dialogTitle = "⚠️ 警告 ⚠️"
                         warningDialog.dialogMessage = "最大文字数を超えるため、10文字以下で入力してください"
                         warningDialog.editText = null
                         warningDialog.onOkClickListener = DialogInterface.OnClickListener { _, _->}
@@ -140,22 +140,17 @@ class MainActivity : AppCompatActivity() {
                             textData,
                             0 // 初期値をInactive(0)とする
                         )
-
                         // 挿入
                         dbhelper.insertTODO(todoRecord)
-
                         // 保存
                         Snackbar.make(view,"$textData をTODOリストへ追加しました", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show()
-
                         // ListViewリロード
                         todoFragment.reload(context, dbhelper)
-
                         // 逆回転
                         if (state == FloatingActionState.ANIMATED && !closingAnimation.isRunning) {
                             closeFloatingActionFragment()
                         }
-
                         // Dialogを閉じる
                         dialog.dialogDismiss()
                     }
