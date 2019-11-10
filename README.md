@@ -51,3 +51,5 @@ Kotlinで制作したTODOアプリです
 ### TODOリストに登録可能な最大件数を超えた場合
 <img src="https://user-images.githubusercontent.com/28224709/68540496-6cb66980-03d6-11ea-98b6-6c1dc9edb11d.jpg" width="30%">
 
+### 対象のTODO項目を削除する場合
+<img src="https://user-images.githubusercontent.com/28224709/68541450-fe2bd880-03e2-11ea-9a93-6d3b50398624.jpg" width="30%">
