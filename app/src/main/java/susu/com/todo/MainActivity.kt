@@ -47,17 +47,17 @@ import susu.com.todo.view.TodoFragment
  * TODO アプリアイコン変えたい(希望)
  */
 class MainActivity : AppCompatActivity() {
-    // アニメーション定数
-    enum class FloatingActionState {
-        NORMAL, ANIMATED
-    }
-
 //    private var dataModel = DataModel("")
     private val context : Context = this
 
     // Todo一覧のインスタンスを保持
     private lateinit var todoFragment:TodoFragment
 
+    // アニメーション定数
+    enum class FloatingActionState {
+        NORMAL,
+        ANIMATED
+    }
     // アニメーションプロパティ
     private lateinit var state: FloatingActionState
     private lateinit var openingAnimation: Animator
@@ -121,7 +121,6 @@ class MainActivity : AppCompatActivity() {
                     // ダイアログ表示
                     warningDialog.openDialog(supportFragmentManager)
                 } else {
-                    // TODO 文字列が10文字以下のValidationを設ける?
                     // 文字数が10文字以上なのか判定
                     if(textData.length > 10){
                         // ダイアログを閉じないで新規ダイアログ表示

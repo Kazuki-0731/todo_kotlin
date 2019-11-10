@@ -36,7 +36,7 @@ class TodoFragment  : Fragment() {
         }
 
         // Adapter生成
-        adapter = TodoListAdapter(activity!!.applicationContext, dataArray)
+        adapter = TodoListAdapter(activity!!.applicationContext, dataArray, this)
         // listViewに代入
         listView.adapter = adapter
 
@@ -56,7 +56,7 @@ class TodoFragment  : Fragment() {
         var dataArray = db.selectTODO()
 
         // adapterセット
-        adapter = TodoListAdapter(context, dataArray)
+        adapter = TodoListAdapter(context, dataArray, this)
         adapter!!.notifyDataSetChanged()
         listView.adapter = adapter
     }

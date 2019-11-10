@@ -95,6 +95,27 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         return result
     }
 
+    /**
+     * １レコード削除
+     */
+    fun deleteRecord(id : Int) {
+        val db = writableDatabase
+        var result = 0
+        try {
+            // クエリ
+            db.delete(DBContract.DataEntry.TABLE_NAME,
+                DBContract.DataEntry.ID + " = ?",
+                arrayOf(id.toString()))
+        } catch (e: Exception) {
+            // エラー内容をLog出力
+            Log.d("debug", "delete Error")
+            Log.d("debug", e.message)
+        } finally {
+            // 閉じる
+            db.close()
+        }
+    }
+
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(SQL_CREATE_TODOS)
     }
@@ -136,6 +157,15 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         private const val SQL_COUNT_TODOS =  "SELECT " +
                 "count(" + DBContract.DataEntry.ID + ") as cnt" +
                 " FROM " + DBContract.DataEntry.TABLE_NAME
+
+        //TODO あとで削除
+//
+//        /**
+//         * idを指定して対象レコードを削除
+//         */
+//        private const val SQL_DELETE_COLUMN_TODOS =  "DELETE " +
+//                " FROM " + DBContract.DataEntry.TABLE_NAME +
+//                " WHERE " + DBContract.DataEntry.ID + " = "
 
         /**
          * 削除

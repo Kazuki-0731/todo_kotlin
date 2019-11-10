@@ -19,7 +19,6 @@ class InputTextDialog( mc: Context) {
     // テキスト入力用のダイアログ
     private val mDialog = MyDialog()
     init {
-        // TODO エンター押下で改行を防止
         mDialog.mEdit =  EditText(mc)
     }
 
@@ -145,7 +144,7 @@ class InputTextDialog( mc: Context) {
     }
 
     /**
-     * DialogFragment子クラス
+     * カスタム化されたDialogFragmentクラス
      */
     class MyDialog : DialogFragment() {
         // パラメータ未設定時の基本状態
@@ -165,7 +164,7 @@ class InputTextDialog( mc: Context) {
         var isCustomOkButton : Boolean = false
 
         /**
-         * Dialog生成
+         * カスタムDialog生成
          */
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             // 実際は AlertDialog を使用
