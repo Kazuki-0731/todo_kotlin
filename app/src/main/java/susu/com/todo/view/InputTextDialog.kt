@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -56,7 +57,30 @@ class InputTextDialog( mc: Context) {
             mDialog.mTextData = value
         }
     /**
+     * 外部からテキストボックスの操作をする
+     */
+    var editText : EditText?
+        get() {
+            return mDialog.mEdit
+        }
+        set(value) {
+            mDialog.mEdit = value
+        }
+    /**
+     * OKボタンを利用するのかフラグ
+     * 標準クラスのOKボタン押下の挙動をする
+     */
+    var isOkButton : Boolean
+        get() {
+            return mDialog.isOkButton
+        }
+        set(value) {
+            mDialog.isOkButton = value
+        }
+    /**
      * OK時の処理
+     * 標準クラスのOKボタン押下の挙動をする
+     * OK押下で強制的に閉じさせる
      */
     var onOkClickListener : DialogInterface.OnClickListener
         get() {
@@ -65,10 +89,11 @@ class InputTextDialog( mc: Context) {
         }
         set(value) {
             mDialog.isOkButton = true
-//            mDialog.onOkClickListener = value
+            mDialog.isCustomOkButton = false    //明示的に記載(書かなくても初期値がfalseである)
+            mDialog.onOkClickListener = value
         }
     /**
-     * キャンセルボタンを利用するのか
+     * キャンセルボタンを利用するのかフラグ
      */
     var isCancelButton : Boolean
         get() {
@@ -89,19 +114,12 @@ class InputTextDialog( mc: Context) {
             mDialog.isCancelButton = true
             mDialog.onCancelClickListener = value
         }
-    /**
-     * 入力が最大を超えているのかフラグ
-     */
-    var overInputLimit : Boolean
-        get() {
-            return mDialog.overInputLimit
-        }
-        set(value) {
-            mDialog.overInputLimit = value
-        }
 
     /**
-     * カスタムされたOKボタンの処理
+     * OK時の処理
+     * 標準クラスから切り離して、カスタムされたOKボタン押下時の挙動
+     * つまり、OK押下で任意に閉じさせる
+     * 処理内容については、外部から注入させる
      */
     var onOkButtonClickListener : View.OnClickListener
         get() {
@@ -110,9 +128,11 @@ class InputTextDialog( mc: Context) {
         }
         set(value) {
             mDialog.isOkButton = true
+            mDialog.isCustomOkButton = true
             mDialog.onOkButtonClickListener = value
         }
 
+    // 外部からカスタムされたDialogFragmentを閉じさせるためのメソッド
     fun dialogDismiss(){
         mDialog.diagDismiss()
     }
@@ -133,13 +153,16 @@ class InputTextDialog( mc: Context) {
         var mMsg  : String = ""
         var mEdit : EditText? = null
         var mTextData : String = ""
+        // 標準OKボタン
         var isOkButton : Boolean = false
-//        var onOkClickListener : DialogInterface.OnClickListener = DialogInterface.OnClickListener {_, _ -> }
+        var onOkClickListener : DialogInterface.OnClickListener = DialogInterface.OnClickListener {_, _ -> }
+        // 標準Cancelボタン
         var isCancelButton : Boolean = false
         var onCancelClickListener : DialogInterface.OnClickListener = DialogInterface.OnClickListener { _, _ -> }
-        var overInputLimit : Boolean = false
 
+        // カスタムOKボタン
         var onOkButtonClickListener : View.OnClickListener = View.OnClickListener {  }
+        var isCustomOkButton : Boolean = false
 
         /**
          * Dialog生成
@@ -162,23 +185,26 @@ class InputTextDialog( mc: Context) {
             }
             // 入力ボックス
             mEdit?.setText( mTextData )
+            mEdit?.inputType = InputType.TYPE_CLASS_TEXT    //改行防止
             dialogBuilder.setView(mEdit)
-            //OKボタン有無
-            if (isOkButton) {
-                // OKボタン押下時にValidationを設けるため、DialogクラスのOKボタンの閉じる処理を切り離すためにnullを入れた
-                dialogBuilder.setPositiveButton(getString(android.R.string.ok), null)
-            }
             // キャンセルボタン有無
             if (isCancelButton) {
                 dialogBuilder.setNegativeButton(getString(android.R.string.cancel), onCancelClickListener)
             }
-
-            // OKボタンオブジェクト取得
-            val malertDiag : AlertDialog = dialogBuilder.show()
-            val okButton : Button = malertDiag.getButton(DialogInterface.BUTTON_POSITIVE)
-            okButton.setOnClickListener(onOkButtonClickListener)
-
-            return malertDiag
+            //OKボタン有無
+            if (isOkButton && isCustomOkButton) {
+                // OKボタン押下時にValidationを設けるため、DialogクラスのOKボタンの閉じる処理を切り離すためにnullを入れた
+                dialogBuilder.setPositiveButton(getString(android.R.string.ok), null)
+                // OKボタンオブジェクト取得
+                val malertDiag : AlertDialog = dialogBuilder.show()
+                val okButton : Button = malertDiag.getButton(DialogInterface.BUTTON_POSITIVE)
+                okButton.setOnClickListener(onOkButtonClickListener)
+                return malertDiag
+            } else if(isOkButton && !isCustomOkButton){
+                // カスタムOKボタンを利用しない場合
+                dialogBuilder.setPositiveButton(getString(android.R.string.ok), onOkClickListener)
+            }
+            return dialogBuilder.show()
         }
 
         // onPause でダイアログを閉じている

@@ -24,15 +24,19 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     /**
      * データ追加
      */
-    fun insertTODO(dataModel: DataModel): Boolean {
+    fun insertTODO(dataModel: DataModel) {
         val db = writableDatabase
         val values = ContentValues()
-        values.put(DBContract.DataEntry.ID, dataModel.id)
-        values.put(DBContract.DataEntry.TODO_NAME, dataModel.todoList)
-        values.put(DBContract.DataEntry.STATUS, dataModel.status)
-        val rowId = db.insert(DBContract.DataEntry.TABLE_NAME, null, values)
-        Log.println(0 , "debug", "result : ".plus(rowId.toString()))
-        return true
+        try {
+            values.put(DBContract.DataEntry.ID, dataModel.id)
+            values.put(DBContract.DataEntry.TODO_NAME, dataModel.todoList)
+            values.put(DBContract.DataEntry.STATUS, dataModel.status)
+            db.insert(DBContract.DataEntry.TABLE_NAME, null, values)
+        } catch (e : Exception){
+            // エラー内容をLog出力
+            Log.d("debug", "insert Error")
+            Log.d("debug", e.message)
+        }
     }
 
     /**
@@ -50,10 +54,8 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                 null,
                 null,
                 null,
-                DBContract.DataEntry.ID + " DESC",
+                DBContract.DataEntry.ID + " ASC",
                 null)
-
-            Log.d("debug", "select through")
 
             // 全データ配列化
             while (cursor.moveToNext()) {

@@ -98,65 +98,29 @@ class MainActivity : AppCompatActivity() {
             }
 
             // ダイアログ生成
-            val dialog : InputTextDialog = InputTextDialog(this)
+            val dialog = InputTextDialog(context)
             // ダイアログ用にカスタムクラスに設定している
             dialog.dialogTitle = "テキスト入力"
             dialog.dialogMessage = "TODO項目を入力してください"
             dialog.dialogTextData = ""
             // OKボタン
-            dialog.onOkClickListener = DialogInterface.OnClickListener { _, _->
-                // TODO 文字列が10文字以下のValidationを設ける?
-                // TODO 正規表現でフィルターかけたい
-                // 入力テキストを保存
-                val textData = dialog.dialogTextData
-
-                // 文字数が10文字以上なのか判定
-                if(textData.length > 10){
-                    // ダイアログを閉じない
-                    dialog.overInputLimit = true
-                    dialog.dialogMessage = "10文字以下で入力してください"
-                } else {
-                    // DBに保存
-                    // TODO 最後のID取得
-                    val todoRecord = DataModel(
-                        dbhelper.getCountID(),
-                        textData,
-                        0 // 初期値を0とする
-                    )
-
-                    // 挿入
-                    val result = dbhelper.insertTODO(todoRecord)
-
-                    // 保存成功
-                    if(result){
-                        // 通知
-                        Snackbar.make(view,"$textData をTODOリストへ追加しました", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show()
-                    } else {
-                        // 保存失敗
-                    }
-
-                    // ListViewリロード
-                    todoFragment.reload(context, dbhelper)
-
-                    // 逆回転
-                    if (state == FloatingActionState.ANIMATED && !closingAnimation.isRunning) {
-                        closeFloatingActionFragment()
-                    }
-                }
-            }
-
             dialog.onOkButtonClickListener = View.OnClickListener {
                 // TODO 文字列が10文字以下のValidationを設ける?
-                // TODO 正規表現でフィルターかけたい
                 // 入力テキストを保存
                 val textData = dialog.dialogTextData
 
                 // 文字数が10文字以上なのか判定
                 if(textData.length > 10){
-                    // ダイアログを閉じない
-                    dialog.overInputLimit = true
-                    dialog.dialogMessage = "10文字以下で入力してください"
+                    // ダイアログを閉じないで新規ダイアログ表示
+                    val warningDialog = InputTextDialog(context)
+                    warningDialog.dialogTitle = "▲警告▲"
+                    warningDialog.dialogMessage = "10文字以下で入力してください"
+                    warningDialog.editText = null
+                    warningDialog.onOkClickListener = DialogInterface.OnClickListener { _, _->}
+                    warningDialog.isOkButton = true
+                    warningDialog.isCancelButton = false
+                    // ダイアログ表示
+                    warningDialog.openDialog(supportFragmentManager)
                 } else {
                     // DBに保存
                     // TODO 最後のID取得
@@ -167,16 +131,11 @@ class MainActivity : AppCompatActivity() {
                     )
 
                     // 挿入
-                    val result = dbhelper.insertTODO(todoRecord)
+                    dbhelper.insertTODO(todoRecord)
 
-                    // 保存成功
-                    if(result){
-                        // 通知
-                        Snackbar.make(view,"$textData をTODOリストへ追加しました", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show()
-                    } else {
-                        // 保存失敗
-                    }
+                    // 保存
+                    Snackbar.make(view,"$textData をTODOリストへ追加しました", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show()
 
                     // ListViewリロード
                     todoFragment.reload(context, dbhelper)
