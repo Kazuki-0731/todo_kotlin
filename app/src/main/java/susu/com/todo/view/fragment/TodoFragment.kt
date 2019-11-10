@@ -1,4 +1,4 @@
-package susu.com.todo.view
+package susu.com.todo.view.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -8,7 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.content_main.*
 import susu.com.todo.R
-import susu.com.todo.mdoel.DBHelper
+import susu.com.todo.mdoel.database.DBHelper
+import susu.com.todo.view.fragment.util.TodoListAdapter
 
 /**
  * ListViewのFragment
@@ -23,7 +24,7 @@ class TodoFragment  : Fragment() {
         return inflater.inflate(R.layout.content_main, container, false)
     }
 
-    //表示後
+    // 表示後
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // 配列初期化
         var dataArray: Array<String> = arrayOf()

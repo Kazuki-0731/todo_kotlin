@@ -1,4 +1,4 @@
-package susu.com.todo.mdoel
+package susu.com.todo.mdoel.database
 
 import android.provider.BaseColumns
 

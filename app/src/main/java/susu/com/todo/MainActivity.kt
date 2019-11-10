@@ -16,10 +16,10 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 
 import kotlinx.android.synthetic.main.activity_main.*
-import susu.com.todo.mdoel.DBHelper
-import susu.com.todo.mdoel.DataModel
-import susu.com.todo.view.InputTextDialog
-import susu.com.todo.view.TodoFragment
+import susu.com.todo.mdoel.database.DBHelper
+import susu.com.todo.mdoel.entities.DataModel
+import susu.com.todo.view.fragment.util.InputTextDialog
+import susu.com.todo.view.fragment.TodoFragment
 
 /**
  * 右下にあるボタン押下でTODOのリストを追加するためのPopUp表示
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     private val context : Context = this
 
     // Todo一覧のインスタンスを保持
-    private lateinit var todoFragment:TodoFragment
+    private lateinit var todoFragment: TodoFragment
 
     // アニメーション定数
     enum class FloatingActionState {
@@ -124,7 +124,8 @@ class MainActivity : AppCompatActivity() {
                     // 文字数が10文字以上なのか判定
                     if(textData.length > 10){
                         // ダイアログを閉じないで新規ダイアログ表示
-                        val warningDialog = InputTextDialog(context)
+                        val warningDialog =
+                            InputTextDialog(context)
                         warningDialog.dialogTitle = "⚠️ 警告 ⚠️"
                         warningDialog.dialogMessage = "最大文字数を超えるため、10文字以下で入力してください"
                         warningDialog.editText = null

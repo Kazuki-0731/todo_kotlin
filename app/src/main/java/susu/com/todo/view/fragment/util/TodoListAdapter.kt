@@ -1,4 +1,4 @@
-package susu.com.todo.view
+package susu.com.todo.view.fragment.util
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,8 +12,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import susu.com.todo.R
-import susu.com.todo.mdoel.DBContract
-import susu.com.todo.mdoel.DBHelper
+import susu.com.todo.mdoel.database.DBContract
+import susu.com.todo.mdoel.database.DBHelper
+import susu.com.todo.view.fragment.TodoFragment
 
 class TodoListAdapter(private val context: Context,
                       private val sortedList: Array<String>,

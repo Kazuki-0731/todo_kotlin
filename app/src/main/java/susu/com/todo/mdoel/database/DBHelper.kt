@@ -1,4 +1,4 @@
-package susu.com.todo.mdoel
+package susu.com.todo.mdoel.database
 
 import android.content.ContentValues
 import android.content.Context
@@ -6,12 +6,16 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import susu.com.todo.mdoel.entities.DataModel
 import java.lang.Exception
 
 /**
  * SQLiteOpenHelperの拡張クラス
  */
-class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class DBHelper(context: Context) : SQLiteOpenHelper(context,
+    DATABASE_NAME, null,
+    DATABASE_VERSION
+) {
     @Throws(SQLiteException::class)
 
     /**
@@ -154,7 +158,8 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             val values = ContentValues()
             values.put(DBContract.DataEntry.STATUS,status)
             // クエリ
-            db.update(DBContract.DataEntry.TABLE_NAME,
+            db.update(
+                DBContract.DataEntry.TABLE_NAME,
                 values,
                 DBContract.DataEntry.ID + " = ?",
                 arrayOf(id))
@@ -175,7 +180,8 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         val db = writableDatabase
         try {
             // クエリ
-            db.delete(DBContract.DataEntry.TABLE_NAME,
+            db.delete(
+                DBContract.DataEntry.TABLE_NAME,
                 DBContract.DataEntry.ID + " = ?",
                 arrayOf(id))
         } catch (e: Exception) {
