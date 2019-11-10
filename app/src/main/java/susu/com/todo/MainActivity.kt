@@ -105,16 +105,15 @@ class MainActivity : AppCompatActivity() {
             dialog.dialogTextData = ""
             // OKボタン
             dialog.onOkButtonClickListener = View.OnClickListener {
-                // TODO 文字列が10文字以下のValidationを設ける?
-                // 入力テキストを保存
+                // 入力テキストを保持
                 val textData = dialog.dialogTextData
 
-                // 文字数が10文字以上なのか判定
-                if(textData.length > 10){
+                // DBの保存できる上限なのかチェック
+                if(dbhelper.getCountID() >= 100){
                     // ダイアログを閉じないで新規ダイアログ表示
                     val warningDialog = InputTextDialog(context)
-                    warningDialog.dialogTitle = "▲警告▲"
-                    warningDialog.dialogMessage = "10文字以下で入力してください"
+                    warningDialog.dialogTitle = "▲ 警告 ▲"
+                    warningDialog.dialogMessage = "最大登録件数を超えるため、１件以上削除してください"
                     warningDialog.editText = null
                     warningDialog.onOkClickListener = DialogInterface.OnClickListener { _, _->}
                     warningDialog.isOkButton = true
@@ -122,31 +121,45 @@ class MainActivity : AppCompatActivity() {
                     // ダイアログ表示
                     warningDialog.openDialog(supportFragmentManager)
                 } else {
-                    // DBに保存
-                    // TODO 最後のID取得
-                    val todoRecord = DataModel(
-                        dbhelper.getCountID(),
-                        textData,
-                        0 // 初期値を0とする
-                    )
+                    // TODO 文字列が10文字以下のValidationを設ける?
+                    // 文字数が10文字以上なのか判定
+                    if(textData.length > 10){
+                        // ダイアログを閉じないで新規ダイアログ表示
+                        val warningDialog = InputTextDialog(context)
+                        warningDialog.dialogTitle = "▲ 警告 ▲"
+                        warningDialog.dialogMessage = "最大文字数を超えるため、10文字以下で入力してください"
+                        warningDialog.editText = null
+                        warningDialog.onOkClickListener = DialogInterface.OnClickListener { _, _->}
+                        warningDialog.isOkButton = true
+                        warningDialog.isCancelButton = false
+                        // ダイアログ表示
+                        warningDialog.openDialog(supportFragmentManager)
+                    } else {
+                        // DBに保存
+                        val todoRecord = DataModel(
+                            dbhelper.getCountID(),
+                            textData,
+                            0 // 初期値をInactive(0)とする
+                        )
 
-                    // 挿入
-                    dbhelper.insertTODO(todoRecord)
+                        // 挿入
+                        dbhelper.insertTODO(todoRecord)
 
-                    // 保存
-                    Snackbar.make(view,"$textData をTODOリストへ追加しました", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show()
+                        // 保存
+                        Snackbar.make(view,"$textData をTODOリストへ追加しました", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show()
 
-                    // ListViewリロード
-                    todoFragment.reload(context, dbhelper)
+                        // ListViewリロード
+                        todoFragment.reload(context, dbhelper)
 
-                    // 逆回転
-                    if (state == FloatingActionState.ANIMATED && !closingAnimation.isRunning) {
-                        closeFloatingActionFragment()
+                        // 逆回転
+                        if (state == FloatingActionState.ANIMATED && !closingAnimation.isRunning) {
+                            closeFloatingActionFragment()
+                        }
+
+                        // Dialogを閉じる
+                        dialog.dialogDismiss()
                     }
-
-                    // Dialogを閉じる
-                    dialog.dialogDismiss()
                 }
             }
 
