@@ -72,7 +72,6 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
                 } else if(FrontConst.SharedPref.INACTIVE_TODO_LIST.value == shapre.listActiveSwitch){
                     status = "1"
                 }
-                Log.d("debug", "shapre.listActiveSwitch = " + shapre.listActiveSwitch)
                 // クエリ
                 cursor = db.query(
                     DBConstruct.DataEntry.TABLE_NAME,
@@ -127,18 +126,40 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
      */
     fun getAllID() : Array<String> {
         val db = writableDatabase
+        val shapre = SharedPref(context)
         var mutableList : MutableList<String> = mutableListOf()
         try {
-            // クエリ
-            val cursor = db.query(
-                DBConstruct.DataEntry.TABLE_NAME,
-                arrayOf(DBConstruct.DataEntry.ID),
-                null,
-                null,
-                null,
-                null,
-                DBConstruct.DataEntry.ID + " ASC",
-                null)
+            var cursor : Cursor
+            if(FrontConst.SharedPref.ALL_TODO_LIST.value == shapre.listActiveSwitch){
+                // クエリ
+                cursor = db.query(
+                    DBConstruct.DataEntry.TABLE_NAME,
+                    arrayOf(DBConstruct.DataEntry.ID),
+                    null,
+                    null,
+                    null,
+                    null,
+                    DBConstruct.DataEntry.ID + " ASC",
+                    null)
+            } else {
+                var status = ""
+                // 表示用設定値 -> フラグ
+                if(FrontConst.SharedPref.ACTIVE_TODO_LIST.value == shapre.listActiveSwitch){
+                    status = "0"
+                } else if(FrontConst.SharedPref.INACTIVE_TODO_LIST.value == shapre.listActiveSwitch){
+                    status = "1"
+                }
+                // クエリ
+                cursor = db.query(
+                    DBConstruct.DataEntry.TABLE_NAME,
+                    arrayOf(DBConstruct.DataEntry.ID),
+                    DBConstruct.DataEntry.STATUS + " = ?",
+                    arrayOf(status),
+                    null,
+                    null,
+                    DBConstruct.DataEntry.ID + " ASC",
+                    null)
+            }
 
             // 全データ配列化
             while (cursor.moveToNext()) {
@@ -157,14 +178,14 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
     }
 
     /**
-     * Stateの一覧をIDの昇順で取得
+     * StateをID指定で取得
      */
-    fun getStatus(status : String) : Int {
+    fun getStatus(id : String) : Int {
         val db = writableDatabase
         var result = 0
         try {
             // クエリ
-            val cursor = db.rawQuery(SQL_STATUS_TODOS, arrayOf(status))
+            val cursor = db.rawQuery(SQL_STATUS_TODOS, arrayOf(id))
             cursor.moveToFirst()
             result = cursor.getInt(cursor.getColumnIndex(DBConstruct.DataEntry.STATUS))
         } catch (e: Exception) {
