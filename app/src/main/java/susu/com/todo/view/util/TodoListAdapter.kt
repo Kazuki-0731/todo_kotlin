@@ -102,8 +102,6 @@ class TodoListAdapter(private val context: Context,
          * inactice -> active
          * チェックボックスをOff
          * この時に文字の横線を解除
-         *
-         * TODO フィルターをかけたIDを取得しているわけではない。要修正
          */
         // DBオブジェクト生成
         val dbhelper = DBHelper(context)

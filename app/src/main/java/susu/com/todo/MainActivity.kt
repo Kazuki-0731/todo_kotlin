@@ -93,9 +93,8 @@ class MainActivity : AppCompatActivity() {
         openingAnimation = createOpenFloatingActionButton()
         closingAnimation = createCloseFloatingActionButton()
 
-        // 初期でフォルターアイコンの表示切替
         /**
-         * 設定値から読み出し
+         * 設定値から読み出して初期表示
          */
         when (shapre.listActiveSwitch){
             /**
