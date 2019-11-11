@@ -2,17 +2,20 @@ package susu.com.todo.mdoel.database
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import susu.com.todo.mdoel.action.SharedPref
 import susu.com.todo.mdoel.entities.DataModel
+import susu.com.todo.view.common.FrontConst
 import java.lang.Exception
 
 /**
  * SQLiteOpenHelperの拡張クラス
  */
-class DBHelper(context: Context) : SQLiteOpenHelper(
+class DBHelper(val context: Context) : SQLiteOpenHelper(
     context,
     DATABASE_NAME,
     null,
@@ -42,23 +45,45 @@ class DBHelper(context: Context) : SQLiteOpenHelper(
     }
 
     /**
-     * 全レコード取得(昇順)
+     * レコード取得(昇順)
      */
     fun selectTODO() : Array<String> {
         val db = writableDatabase
+        val shapre = SharedPref(context)
         var mutableList : MutableList<String> = mutableListOf()
         try {
-            // クエリ
-            val cursor = db.query(
-                DBConstruct.DataEntry.TABLE_NAME,
-                arrayOf(DBConstruct.DataEntry.TODO_NAME),
-                null,
-                null,
-                null,
-                null,
-                DBConstruct.DataEntry.ID + " ASC",
-                null)
-
+            var cursor : Cursor
+            if(FrontConst.SharedPref.ALL_TODO_LIST.value == shapre.listActiveSwitch){
+                // クエリ
+                cursor = db.query(
+                    DBConstruct.DataEntry.TABLE_NAME,
+                    arrayOf(DBConstruct.DataEntry.TODO_NAME),
+                    null,
+                    null,
+                    null,
+                    null,
+                    DBConstruct.DataEntry.ID + " ASC",
+                    null)
+            } else {
+                var status = ""
+                // 表示用設定値 -> フラグ
+                if(FrontConst.SharedPref.ACTIVE_TODO_LIST.value == shapre.listActiveSwitch){
+                    status = "0"
+                } else if(FrontConst.SharedPref.INACTIVE_TODO_LIST.value == shapre.listActiveSwitch){
+                    status = "1"
+                }
+                Log.d("debug", "shapre.listActiveSwitch = " + shapre.listActiveSwitch)
+                // クエリ
+                cursor = db.query(
+                    DBConstruct.DataEntry.TABLE_NAME,
+                    arrayOf(DBConstruct.DataEntry.TODO_NAME),
+                    DBConstruct.DataEntry.STATUS + " = ?",
+                    arrayOf(status),
+                    null,
+                    null,
+                    DBConstruct.DataEntry.ID + " ASC",
+                    null)
+            }
             // 全データ配列化
             while (cursor.moveToNext()) {
                 mutableList.add(cursor.getString(0))

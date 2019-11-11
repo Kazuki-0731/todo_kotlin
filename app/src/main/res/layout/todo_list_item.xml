@@ -45,7 +45,7 @@
         android:gravity="center"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_delete_black_24dp"
+        android:src="@drawable/ic_delete_red_24dp"
         />
 
     <Space

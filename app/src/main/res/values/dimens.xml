@@ -1,3 +1,9 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
+    <!--    TODO追加ボタンのマージン-->
+    <dimen name="fab_todo_add_margin_bottom">16dp</dimen>
+    <dimen name="fab_todo_add_margin_right">16dp</dimen>
+
+    <!--    TODOリストのActive/Inactiveのマージン-->
+    <dimen name="fab_todo_active_inactive_margin_bottom">16dp</dimen>
+    <dimen name="fab_todo_active_inactive_margin_right">92dp</dimen>
 </resources>

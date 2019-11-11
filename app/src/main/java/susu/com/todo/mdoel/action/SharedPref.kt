@@ -10,13 +10,16 @@ import kotlin.reflect.KProperty
  *
  * 初期値があるプロパティ、Nullableなプロパティに対して、
  * 自動で保存する機能を継承
+ *
+ * 汎用性高くするために、すべての型に対応
  */
 class SharedPref(context: Context) {
 
     private val appPref: SharedPreferences = context.getSharedPreferences("app_pref", Context.MODE_PRIVATE)
 
-    // todoListItemへの読み書きがそのまま SharedPreferences への読み書きになる
-    var todoListItem: String? by nullablePref()
+    // listActiveSwitchへの読み書きがそのまま SharedPreferences への読み書きになる
+//    var listActiveSwitch : Int? by nullablePref()
+    var listActiveSwitch : String by pref(default = "0")
 
     /**
      * デフォルト値があるプロパティに対してgetter/setterでのsharedPreで保存/読み取り

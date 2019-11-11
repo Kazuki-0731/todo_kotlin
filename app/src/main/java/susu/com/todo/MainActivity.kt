@@ -14,8 +14,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import androidx.core.content.res.ResourcesCompat
 
 import kotlinx.android.synthetic.main.activity_main.*
+import susu.com.todo.mdoel.action.SharedPref
 import susu.com.todo.mdoel.database.DBHelper
 import susu.com.todo.mdoel.entities.DataModel
 import susu.com.todo.view.common.FrontConst
@@ -73,7 +75,9 @@ class MainActivity : AppCompatActivity() {
 
         // DBHelperクラス初期化
         val dbhelper = DBHelper(this)
-        Log.d("debug", "表示テスト")
+
+        // 設定値保存用
+        val shapre = SharedPref(this)
 
         // Fragment生成
         if (savedInstanceState == null) {
@@ -89,8 +93,76 @@ class MainActivity : AppCompatActivity() {
         openingAnimation = createOpenFloatingActionButton()
         closingAnimation = createCloseFloatingActionButton()
 
+        // 初期でフォルターアイコンの表示切替
+        /**
+         * 設定値から読み出し
+         */
+        when (shapre.listActiveSwitch){
+            /**
+             * 全部表示
+             */
+            FrontConst.SharedPref.ALL_TODO_LIST.value ->{
+                // all -> active
+                fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_yellow_24dp, null))
+            }
+            /**
+             * Active表示
+             */
+            FrontConst.SharedPref.ACTIVE_TODO_LIST.value ->{
+                // active -> inactive
+                fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_gray_24dp, null))
+            }
+            /**
+             * Inactive表示
+             */
+            FrontConst.SharedPref.INACTIVE_TODO_LIST.value ->{
+                // inactive -> all
+                fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_view_headline_white_24dp, null))
+            }
+        }
+
+        // Anctive/Inactive切替
+        fab_active_inactive.setOnClickListener { view ->
+            /**
+             * 設定値から読み出し
+             */
+            when (shapre.listActiveSwitch){
+                /**
+                 * 全部表示
+                 */
+                FrontConst.SharedPref.ALL_TODO_LIST.value ->{
+                    // all -> active
+                    shapre.listActiveSwitch = FrontConst.SharedPref.ACTIVE_TODO_LIST.value
+                    fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_yellow_24dp, null))
+                }
+                /**
+                 * Active表示
+                 */
+                FrontConst.SharedPref.ACTIVE_TODO_LIST.value ->{
+                    // active -> inactive
+                    shapre.listActiveSwitch = FrontConst.SharedPref.INACTIVE_TODO_LIST.value
+                    fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_gray_24dp, null))
+                }
+                /**
+                 * Inactive表示
+                 */
+                FrontConst.SharedPref.INACTIVE_TODO_LIST.value ->{
+                    // inactive -> all
+                    shapre.listActiveSwitch = FrontConst.SharedPref.ALL_TODO_LIST.value
+                    fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_view_headline_white_24dp, null))
+                }
+            }
+
+            // ListViewリロード
+            todoFragment.reload(context, dbhelper)
+            // 逆回転
+            if (state == FloatingActionState.ANIMATED && !closingAnimation.isRunning) {
+                closeFloatingActionFragment()
+            }
+        }
+
         // 右下のTODO追加ボタン押下
-        fab.setOnClickListener { view ->
+        fab_add.setOnClickListener { view ->
             // 回転
             if (state == FloatingActionState.NORMAL && !openingAnimation.isRunning) {
                 openFloatingActionButton()
@@ -112,12 +184,12 @@ class MainActivity : AppCompatActivity() {
                  * 100件目まで登録可能
                  * 101件からは登録できない
                  */
-                if(dbhelper.getCountID() >= FrontConst.Limit.LISTVIEW_REGIST_LIMIT.value){
+                if(dbhelper.getCountID() >= FrontConst.Limit.LISTVIEW_REGISTER_LIMIT.value){
                     // ダイアログを閉じないで新規ダイアログ表示
                     val warningDialog = InputTextDialog(context)
                     warningDialog.dialogTitle = "⚠️ 警告 ⚠️"
                     warningDialog.dialogMessage = "最大登録件数(" +
-                            FrontConst.Limit.LISTVIEW_REGIST_LIMIT.value +
+                            FrontConst.Limit.LISTVIEW_REGISTER_LIMIT.value +
                             ")を超えるため、１件以上削除してください"
                     warningDialog.editText = null
                     warningDialog.onOkClickListener = DialogInterface.OnClickListener { _, _->}
@@ -211,7 +283,7 @@ class MainActivity : AppCompatActivity() {
     // 開く動作オブジェクト
     private fun createOpenFloatingActionButton(): Animator {
         val anim = AnimatorInflater.loadAnimator(applicationContext, R.animator.fab_open)
-        anim.setTarget(fab)
+        anim.setTarget(fab_add)
         anim.interpolator = DecelerateInterpolator()
         anim.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {
@@ -229,7 +301,7 @@ class MainActivity : AppCompatActivity() {
     // 閉じる動作オブジェクト
     private fun createCloseFloatingActionButton(): Animator {
         val anim = AnimatorInflater.loadAnimator(applicationContext, R.animator.fab_close)
-        anim.setTarget(fab)
+        anim.setTarget(fab_add)
         anim.interpolator = AccelerateInterpolator()
         anim.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {
