@@ -1,6 +1,9 @@
 # TODOアプリ
 Kotlinで制作したTODOアプリです
 
+## [アプリアイコン]
+<img src="https://user-images.githubusercontent.com/28224709/68698113-8e287880-05c3-11ea-9e27-1058ecec00b8.jpg" width="50%">
+
 ## [機能説明]
 * 画面全体をリスト表示しています。
 * アプリ起動後、DBに保存されているデータが表示されます。
@@ -40,16 +43,25 @@ Kotlinで制作したTODOアプリです
 
 ## [実際の画面]
 ### 入力画面
-<img src="https://user-images.githubusercontent.com/28224709/68528488-ac2d7900-0336-11ea-8595-c91f3d7a8008.jpg" width="30%">
+<img src="https://user-images.githubusercontent.com/28224709/68698753-f592f800-05c4-11ea-93c8-96a16ff58b19.jpg" width="50%">
 
 ### データ挿入後
-<img src="https://user-images.githubusercontent.com/28224709/68528493-b18ac380-0336-11ea-97f5-2324d672f3ea.jpg" width="30%">
+<img src="https://user-images.githubusercontent.com/28224709/68697851-0478ab00-05c3-11ea-82ff-dd0e1b969001.jpg" width="50%">
+
+### 未完了タスクのみ表示(中央のボタン押下)
+<img src="https://user-images.githubusercontent.com/28224709/68697825-f88ce900-05c2-11ea-90f7-bdd208a15fa0.jpg" width="50%">
+
+### 完了タスクのみ表示(中央のボタン押下)
+<img src="https://user-images.githubusercontent.com/28224709/68697814-f1fe7180-05c2-11ea-8c3a-daee6f8e37a3.jpg" width="50%">
+
+### すべてのタスク表示(中央のボタン押下)
+<img src="https://user-images.githubusercontent.com/28224709/68697851-0478ab00-05c3-11ea-82ff-dd0e1b969001.jpg" width="50%">
 
 ### 最大入力文字数を超えた場合
-<img src="https://user-images.githubusercontent.com/28224709/68540504-88ba0b00-03d6-11ea-9e80-965d14e10f6e.jpg" width="30%">
+<img src="https://user-images.githubusercontent.com/28224709/68698720-e318be80-05c4-11ea-84c0-8a58afd0284c.jpg" width="50%">
 
 ### TODOリストに登録可能な最大件数を超えた場合
-<img src="https://user-images.githubusercontent.com/28224709/68540496-6cb66980-03d6-11ea-98b6-6c1dc9edb11d.jpg" width="30%">
+<img src="https://user-images.githubusercontent.com/28224709/68698741-f0ce4400-05c4-11ea-97c0-d6657a955e30.jpg" width="50%">
 
 ### 対象のTODO項目を削除する場合
-<img src="https://user-images.githubusercontent.com/28224709/68541450-fe2bd880-03e2-11ea-9a93-6d3b50398624.jpg" width="30%">
+<img src="https://user-images.githubusercontent.com/28224709/68697786-e448ec00-05c2-11ea-8231-54c4724b06e5.jpg" width="50%">
