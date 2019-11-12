@@ -163,6 +163,17 @@ class MainActivity : AppCompatActivity() {
                         warningDialog.isCancelButton = false
                         // ダイアログ表示
                         warningDialog.openDialog(supportFragmentManager)
+                    } else if(textData.isEmpty()){
+                        // ダイアログを閉じないで新規ダイアログ表示
+                        val warningDialog = InputTextDialog(context)
+                        warningDialog.dialogTitle = "⚠️ 警告 ⚠️"
+                        warningDialog.dialogMessage = "1文字以上で入力してください"
+                        warningDialog.editText = null
+                        warningDialog.onOkClickListener = DialogInterface.OnClickListener { _, _->}
+                        warningDialog.isOkButton = true
+                        warningDialog.isCancelButton = false
+                        // ダイアログ表示
+                        warningDialog.openDialog(supportFragmentManager)
                     } else {
                         // DBに保存
                         val todoRecord = DataModel(
