@@ -65,3 +65,6 @@ Kotlinで制作したTODOアプリです
 
 ### 対象のTODO項目を削除する場合
 <img src="https://user-images.githubusercontent.com/28224709/68697786-e448ec00-05c2-11ea-8231-54c4724b06e5.jpg" width="50%">
+
+### 0桁で入力した場合
+<img src="https://user-images.githubusercontent.com/28224709/68699307-1e67bd00-05c6-11ea-8e90-432f0fef0ebf.jpg" width="50%">
