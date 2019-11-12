@@ -13,7 +13,7 @@ object FrontConst {
         UPPER_LIMIT_OF_INPUT_VALUE(50)
     }
 
-    // 初期値
+    // DBのSTATUSの初期値
     enum class Init(val value : Int) {
         /**
          * TODO追加時のSTATUSの初期値

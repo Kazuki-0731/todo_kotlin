@@ -132,7 +132,7 @@ class TodoListAdapter(private val context: Context,
     }
 
     // TextViewの横線解除
-    fun TextView.activeLine() {
+    private fun TextView.activeLine() {
         paint.flags = paint.flags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         paint.isAntiAlias = true
     }

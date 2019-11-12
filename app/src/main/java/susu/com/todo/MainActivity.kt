@@ -15,6 +15,7 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.core.content.res.ResourcesCompat
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 import kotlinx.android.synthetic.main.activity_main.*
 import susu.com.todo.mdoel.action.SharedPref
@@ -31,7 +32,7 @@ import susu.com.todo.view.fragment.TodoFragment
  *
  * validationを設ける
  * 絵文字、半角全角入力可能(文字数のみ)
- * 文字数は最大10文字程度(それ以上だと画面の横幅を超えてしまう)
+ * 文字数は最大50文字程度
  *
  * 文字数を超える場合はアラート表示
  *
@@ -48,7 +49,6 @@ import susu.com.todo.view.fragment.TodoFragment
  * SQLiteOpenHelperの拡張カスタムクラスでデータ保存
  */
 class MainActivity : AppCompatActivity() {
-//    private var dataModel = DataModel("")
     private val context : Context = this
 
     // Todo一覧のインスタンスを保持
@@ -93,71 +93,17 @@ class MainActivity : AppCompatActivity() {
         openingAnimation = createOpenFloatingActionButton()
         closingAnimation = createCloseFloatingActionButton()
 
+        // 設定値から読み出して初期表示
+        switchFilterIcon(shapre)
+
         /**
-         * 設定値から読み出して初期表示
+         * Active/Inactive切替
          */
-        when (shapre.listActiveSwitch){
-            /**
-             * 全部表示
-             */
-            FrontConst.SharedPref.ALL_TODO_LIST.value ->{
-                // all -> active
-                fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_yellow_24dp, null))
-            }
-            /**
-             * Active表示
-             */
-            FrontConst.SharedPref.ACTIVE_TODO_LIST.value ->{
-                // active -> inactive
-                fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_gray_24dp, null))
-            }
-            /**
-             * Inactive表示
-             */
-            FrontConst.SharedPref.INACTIVE_TODO_LIST.value ->{
-                // inactive -> all
-                fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_view_headline_white_24dp, null))
-            }
-        }
-
-        // Anctive/Inactive切替
         fab_active_inactive.setOnClickListener { view ->
-            /**
-             * 設定値から読み出し
-             */
-            when (shapre.listActiveSwitch){
-                /**
-                 * 全部表示
-                 */
-                FrontConst.SharedPref.ALL_TODO_LIST.value ->{
-                    // all -> active
-                    shapre.listActiveSwitch = FrontConst.SharedPref.ACTIVE_TODO_LIST.value
-                    fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_yellow_24dp, null))
-                }
-                /**
-                 * Active表示
-                 */
-                FrontConst.SharedPref.ACTIVE_TODO_LIST.value ->{
-                    // active -> inactive
-                    shapre.listActiveSwitch = FrontConst.SharedPref.INACTIVE_TODO_LIST.value
-                    fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_gray_24dp, null))
-                }
-                /**
-                 * Inactive表示
-                 */
-                FrontConst.SharedPref.INACTIVE_TODO_LIST.value ->{
-                    // inactive -> all
-                    shapre.listActiveSwitch = FrontConst.SharedPref.ALL_TODO_LIST.value
-                    fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_view_headline_white_24dp, null))
-                }
-            }
-
+            // 設定値から読み出して表示切替
+            switchFilterIcon(shapre)
             // ListViewリロード
             todoFragment.reload(context, dbhelper)
-            // 逆回転
-            if (state == FloatingActionState.ANIMATED && !closingAnimation.isRunning) {
-                closeFloatingActionFragment()
-            }
         }
 
         // 右下のTODO追加ボタン押下
@@ -256,7 +202,6 @@ class MainActivity : AppCompatActivity() {
 
     // メニューをActivity上に設置する
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
@@ -279,6 +224,45 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * ------------------------------------------------------------------------------------
+     * 画面下のアイコン(FloatingActionButton)のアイコン切替処理
+     * ------------------------------------------------------------------------------------
+     */
+    private fun switchFilterIcon(shapre : SharedPref){
+        /**
+         * 設定値から読み出して表示切替
+         */
+        when (shapre.listActiveSwitch){
+            /**
+             * 全部表示
+             */
+            FrontConst.SharedPref.ALL_TODO_LIST.value ->{
+                // all -> active
+                fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_yellow_24dp, null))
+            }
+            /**
+             * Active表示
+             */
+            FrontConst.SharedPref.ACTIVE_TODO_LIST.value ->{
+                // active -> inactive
+                fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_gray_24dp, null))
+            }
+            /**
+             * Inactive表示
+             */
+            FrontConst.SharedPref.INACTIVE_TODO_LIST.value ->{
+                // inactive -> all
+                fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_view_headline_white_24dp, null))
+            }
+        }
+    }
+
+    /**
+     * ------------------------------------------------------------------------------------
+     * 右下のアイコン(FloatingActionButton)のアニメーション処理
+     * ------------------------------------------------------------------------------------
+     */
     // 開く動作オブジェクト
     private fun createOpenFloatingActionButton(): Animator {
         val anim = AnimatorInflater.loadAnimator(applicationContext, R.animator.fab_open)
