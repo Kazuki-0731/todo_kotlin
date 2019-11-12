@@ -32,6 +32,31 @@ Kotlinで制作したTODOアプリです
   * 改行を入力できない
     * スマホのキーボードでEnterを押下できない
 
+## [プロジェクト構成]
+Androidプロジェクトのフォルダ構成は、MVCアーキテクチャになっております。
+
+Controllerに関しては、画面遷移が特にないため、MainActivityのみとなります。
+
+### Model構成
+* action
+  * 設定系
+* database
+  * SQLiteのデータベース周り
+* entities
+  * キャッシュ(一時保存)
+
+![Model](https://user-images.githubusercontent.com/28224709/68700424-3d674e80-05c8-11ea-9679-a672599165a6.png)
+
+### View構成
+* common
+  * フロントに共通化する処理や定数など
+* fragment
+  * fragment関係
+* util
+  * UIオブジェクトのカスタムクラス郡
+
+![Veiw](https://user-images.githubusercontent.com/28224709/68700445-448e5c80-05c8-11ea-85f4-50bb43d75bb0.png)
+
 ## [各アイコンの説明]
 * 右下のアイコン押下でダイアログ表示
   * ダイアログ内にあるテキストボックス入力でDB内にデータ挿入
