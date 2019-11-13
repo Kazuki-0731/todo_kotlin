@@ -94,14 +94,14 @@ class MainActivity : AppCompatActivity() {
         closingAnimation = createCloseFloatingActionButton()
 
         // 設定値から読み出して初期表示
-        switchFilterIcon(shapre, 0)
+        switchFilterIcon(shapre, true)
 
         /**
          * Active/Inactive切替
          */
         fab_active_inactive.setOnClickListener {
             // 設定値から読み出して表示切替
-            switchFilterIcon(shapre, 1)
+            switchFilterIcon(shapre, false)
             // ListViewリロード
             todoFragment.reload(context, dbhelper)
         }
@@ -240,7 +240,7 @@ class MainActivity : AppCompatActivity() {
      * 画面下のアイコン(FloatingActionButton)のアイコン切替処理
      * ------------------------------------------------------------------------------------
      */
-    private fun switchFilterIcon(shapre : SharedPref, init : Int){
+    private fun switchFilterIcon(shapre : SharedPref, init : Boolean){
         /**
          * 設定値から読み出して表示切替
          */
@@ -251,7 +251,7 @@ class MainActivity : AppCompatActivity() {
             FrontConst.SharedPref.ALL_TODO_LIST.value ->{
                 // all -> active
                 fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_yellow_24dp, null))
-                if(init != 0){
+                if(init){
                     shapre.listActiveSwitch = FrontConst.SharedPref.ACTIVE_TODO_LIST.value
                 }
             }
@@ -261,7 +261,7 @@ class MainActivity : AppCompatActivity() {
             FrontConst.SharedPref.ACTIVE_TODO_LIST.value ->{
                 // active -> inactive
                 fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_gray_24dp, null))
-                if(init != 0){
+                if(init){
                     shapre.listActiveSwitch = FrontConst.SharedPref.INACTIVE_TODO_LIST.value
                 }
             }
@@ -271,7 +271,7 @@ class MainActivity : AppCompatActivity() {
             FrontConst.SharedPref.INACTIVE_TODO_LIST.value ->{
                 // inactive -> all
                 fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_view_headline_white_24dp, null))
-                if(init != 0){
+                if(init){
                     shapre.listActiveSwitch = FrontConst.SharedPref.ALL_TODO_LIST.value
                 }
             }
