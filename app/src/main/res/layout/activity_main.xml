@@ -24,16 +24,6 @@
     <include layout="@layout/content_main" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_todo_all"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="@dimen/fab_todo_active_inactive_margin_bottom"
-        android:layout_marginEnd="@dimen/fab_todo_active_inactive_margin_right"
-        app:backgroundTint="@color/design_default_color_primary"
-        app:srcCompat="@drawable/ic_grade_yellow_24dp" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_active_inactive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
