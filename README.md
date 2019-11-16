@@ -100,6 +100,10 @@ Controllerに関しては、画面遷移が特にないため、MainActivityの�
 <img src="https://user-images.githubusercontent.com/28224709/68699307-1e67bd00-05c6-11ea-8e90-432f0fef0ebf.jpg" width="50%">
 
 ## [開発時に利用できるツールについて]
+### Hyperion
+実行中のアプリのレイアウトや内部データを確認するために[Hyperion-Android](https://github.com/willowtreeapps/Hyperion-Android) を導入しています。
+Debug ビルドしたアプリがインストールされたデバイスを振るか、通知欄をタップするとメニューが出てくるので、色々と確認できるようになります。
+
 ### Stetho
 実行中のアプリのSQLite 内容を確認するためにFacebook が開発した[Stetho](https://facebook.github.io/stetho/) を導入しています。
 下記の手順で中身を確認できます。
