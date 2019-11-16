@@ -98,3 +98,14 @@ Controllerに関しては、画面遷移が特にないため、MainActivityの�
 
 ### 0桁で入力した場合
 <img src="https://user-images.githubusercontent.com/28224709/68699307-1e67bd00-05c6-11ea-8e90-432f0fef0ebf.jpg" width="50%">
+
+## [開発時に利用できるツールについて]
+### Stetho
+実行中のアプリのSQLite 内容を確認するためにFacebook が開発した[Stetho](https://facebook.github.io/stetho/) を導入しています。
+下記の手順で中身を確認できます。
+
+1. Debug ビルドでアプリをインストールし、アプリを起動状態にする
+2. 手順１でインストールしたデバイスとPC をケーブルなどで接続する(エミュレータの場合は必要ないです)
+3. PC のGoogle Chrome を起動し[chrome://inspect/#devices](chrome://inspect/#devices) を表示する
+4. PC が正常にデバイスを認識できている場合、手順３で表示されたページでアプリ名が表示されるので、それを選択する
+5. アプリの開発者ツールが表示されるので"Resources" の"Web SQL" を選択し、DB の中身を確認する
