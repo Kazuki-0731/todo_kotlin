@@ -14,9 +14,10 @@ import susu.com.todo.view.util.TodoListAdapter
 /**
  * ListViewのFragment
  */
-class TodoFragment  : Fragment() {
+class TodoFragment  : Fragment(), TodoListAdapter.Listener {
 
     private var adapter : TodoListAdapter? = null
+    var dataArray: MutableList<String>? = null
 
     // Fragment生成
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -26,18 +27,19 @@ class TodoFragment  : Fragment() {
 
     // 表示後
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // 配列初期化
-        var dataArray: Array<String> = arrayOf()
+
         // DB初期化
         val dbhelper = DBHelper(activity!!.applicationContext)
         // DBから取得
         if(dbhelper.getCountID() != 0){
-            dataArray = dbhelper.selectTODO()
+            dataArray = dbhelper.selectTODO().toMutableList()
         }
         // Adapter生成
-        adapter = TodoListAdapter(activity!!.applicationContext, dataArray, this)
+        adapter = TodoListAdapter(activity!!.applicationContext, dataArray!!, this)
         // listViewに代入
         listView.adapter = adapter
+
+        adapter!!.setListener(this)
     }
 
     /**
@@ -45,11 +47,17 @@ class TodoFragment  : Fragment() {
      */
     fun reload(context: Context, db : DBHelper){
         // DBから取得
-        var dataArray = db.selectTODO()
+        dataArray = db.selectTODO().toMutableList()
 
         // adapterセット
-        adapter = TodoListAdapter(context, dataArray, this)
+        adapter = TodoListAdapter(context, dataArray!!, this)
+
         adapter!!.notifyDataSetChanged()
         listView.adapter = adapter
+    }
+
+    override fun deleteRow(position: Int) {
+        dataArray!!.removeAt(position)
+        adapter!!.notifyDataSetChanged()
     }
 }

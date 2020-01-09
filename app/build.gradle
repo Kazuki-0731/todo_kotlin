@@ -9,7 +9,7 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "susu.com.todo"
-        minSdkVersion 28
+        minSdkVersion 20
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"

@@ -17,10 +17,12 @@ import susu.com.todo.mdoel.database.DBHelper
 import susu.com.todo.view.fragment.TodoFragment
 
 class TodoListAdapter(private val context: Context,
-                      private val sortedList: Array<String>,
+                      private val sortedList: MutableList<String>,
                       private val fragment: TodoFragment
 ) : BaseAdapter() {
     private val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+    private var listener: Listener? = null
 
     override fun getCount(): Int {
         return sortedList.count()
@@ -83,8 +85,10 @@ class TodoListAdapter(private val context: Context,
                 val allIdList = dbhelper.getAllID()
                 // 対象レコードの削除実行
                 dbhelper.deleteRecord(allIdList[position])
-                // listViewリロード
-                fragment.reload(context, dbhelper)
+//                // listViewリロード
+//                fragment.reload(context, dbhelper)
+//                fragment.dataArray!!.removeAt(position)
+                listener!!.deleteRow(position)
             }
             warningDialog.isCancelButton = true
             // ダイアログ表示
@@ -135,5 +139,13 @@ class TodoListAdapter(private val context: Context,
     private fun TextView.activeLine() {
         paint.flags = paint.flags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         paint.isAntiAlias = true
+    }
+
+    interface Listener {
+        fun deleteRow(position: Int)
+    }
+
+    fun setListener(listener: Listener) {
+        this.listener = listener
     }
 }
