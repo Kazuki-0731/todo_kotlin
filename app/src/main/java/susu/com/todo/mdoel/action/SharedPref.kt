@@ -20,6 +20,7 @@ class SharedPref(context: Context) {
     // listActiveSwitchへの読み書きがそのまま SharedPreferences への読み書きになる
 //    var listActiveSwitch : Int? by nullablePref()
     var listActiveSwitch : String by pref(default = "0")
+    var checkCounter : Int by pref(default = 0)
 
     /**
      * デフォルト値があるプロパティに対してgetter/setterでのsharedPreで保存/読み取り

@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
         NORMAL,
         ANIMATED
     }
+
     // アニメーションプロパティ
     private lateinit var state: FloatingActionState
     private lateinit var openingAnimation: Animator
@@ -93,12 +94,15 @@ class MainActivity : AppCompatActivity() {
         openingAnimation = createOpenFloatingActionButton()
         closingAnimation = createCloseFloatingActionButton()
 
+        // 初期値設定
+//        shapre.listActiveSwitch = FrontConst.SharedPref.ALL_TODO_LIST.value
         // 設定値から読み出して初期表示
         switchFilterIcon(shapre, true)
 
         /**
-         * Active/Inactive切替
+         * onClickのリスナー群
          */
+        // Active/Inactive切替ボタン押下処理
         fab_active_inactive.setOnClickListener {
             // 設定値から読み出して表示切替
             switchFilterIcon(shapre, false)
@@ -106,7 +110,7 @@ class MainActivity : AppCompatActivity() {
             todoFragment.reload(context, dbhelper)
         }
 
-        // 右下のTODO追加ボタン押下
+        // 右下のTODO追加ボタン押下処理
         fab_add.setOnClickListener { view ->
             // 回転
             if (state == FloatingActionState.NORMAL && !openingAnimation.isRunning) {
@@ -252,8 +256,10 @@ class MainActivity : AppCompatActivity() {
              */
             FrontConst.SharedPref.ALL_TODO_LIST.value ->{
                 // all -> active
-                fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_yellow_24dp, null))
                 if(init){
+                    fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_view_headline_white_24dp, null))
+                } else {
+                    fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_yellow_24dp, null))
                     shapre.listActiveSwitch = FrontConst.SharedPref.ACTIVE_TODO_LIST.value
                 }
             }
@@ -262,8 +268,10 @@ class MainActivity : AppCompatActivity() {
              */
             FrontConst.SharedPref.ACTIVE_TODO_LIST.value ->{
                 // active -> inactive
-                fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_gray_24dp, null))
                 if(init){
+                    fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_yellow_24dp, null))
+                } else {
+                    fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_view_headline_white_24dp, null))
                     shapre.listActiveSwitch = FrontConst.SharedPref.INACTIVE_TODO_LIST.value
                 }
             }
@@ -272,8 +280,10 @@ class MainActivity : AppCompatActivity() {
              */
             FrontConst.SharedPref.INACTIVE_TODO_LIST.value ->{
                 // inactive -> all
-                fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_view_headline_white_24dp, null))
                 if(init){
+                    fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_gray_24dp, null))
+                } else {
+                    fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_view_headline_white_24dp, null))
                     shapre.listActiveSwitch = FrontConst.SharedPref.ALL_TODO_LIST.value
                 }
             }
