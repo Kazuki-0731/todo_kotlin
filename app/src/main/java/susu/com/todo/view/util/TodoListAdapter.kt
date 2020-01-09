@@ -107,24 +107,24 @@ class TodoListAdapter(private val context: Context,
          * チェックボックスをOff
          * この時に文字の横線を解除
          */
-        // DBオブジェクト生成
-        val dbhelper = DBHelper(context)
-        // ListViewのpositionから、レコードIDを取得
-        val allIdList = dbhelper.getAllID()
-        // 元々のStateを取得
-        val targetStatus = dbhelper.getStatus(allIdList[position])
-        // DBのstatus判定
-        if(DBConstruct.CheckStatus.INACTIVE.status == targetStatus){
-            // Off -> On
-            imageCheck.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_check_box_black_24dp, null))
-            // 文字に横線
-            todoText.inactiveLine()
-        } else if(DBConstruct.CheckStatus.ACTIVE.status == targetStatus){
-            // On -> Off
-            imageCheck.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_check_box_outline_blank_black_24dp, null))
-            // 文字に横線解除
-            todoText.activeLine()
-        }
+//        // DBオブジェクト生成
+//        val dbhelper = DBHelper(context)
+//        // ListViewのpositionから、レコードIDを取得
+//        val allIdList = dbhelper.getAllID()
+//        // 元々のStateを取得
+//        val targetStatus = dbhelper.getStatus(allIdList[position])
+//        // DBのstatus判定
+//        if(DBConstruct.CheckStatus.INACTIVE.status == targetStatus){
+//            // Off -> On
+//            imageCheck.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_check_box_black_24dp, null))
+//            // 文字に横線
+//            todoText.inactiveLine()
+//        } else if(DBConstruct.CheckStatus.ACTIVE.status == targetStatus){
+//            // On -> Off
+//            imageCheck.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_check_box_outline_blank_black_24dp, null))
+//            // 文字に横線解除
+//            todoText.activeLine()
+//        }
         // 返却
         return view
     }
