@@ -271,7 +271,7 @@ class MainActivity : AppCompatActivity() {
                 if(init){
                     fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_yellow_24dp, null))
                 } else {
-                    fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_view_headline_white_24dp, null))
+                    fab_active_inactive.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_grade_gray_24dp, null))
                     shapre.listActiveSwitch = FrontConst.SharedPref.INACTIVE_TODO_LIST.value
                 }
             }
