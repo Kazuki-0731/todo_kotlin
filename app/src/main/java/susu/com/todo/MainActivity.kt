@@ -94,8 +94,6 @@ class MainActivity : AppCompatActivity() {
         openingAnimation = createOpenFloatingActionButton()
         closingAnimation = createCloseFloatingActionButton()
 
-        // 初期値設定
-//        shapre.listActiveSwitch = FrontConst.SharedPref.ALL_TODO_LIST.value
         // 設定値から読み出して初期表示
         switchFilterIcon(shapre, true)
 
@@ -212,20 +210,6 @@ class MainActivity : AppCompatActivity() {
             dialog.isCancelButton = true
             // ダイアログ表示
             dialog.openDialog(supportFragmentManager)
-        }
-    }
-
-    // メニューをActivity上に設置する
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    // 設定ボタン押下時イベント
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
         }
     }
 
