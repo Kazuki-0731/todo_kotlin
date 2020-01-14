@@ -2,14 +2,19 @@ package susu.com.todo.view.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ListView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.content_main.*
 import susu.com.todo.R
 import susu.com.todo.mdoel.database.DBHelper
 import susu.com.todo.view.util.TodoListAdapter
+
 
 /**
  * ListViewのFragment
@@ -38,6 +43,14 @@ class TodoFragment  : Fragment() {
         adapter = TodoListAdapter(activity!!.applicationContext, dataArray, this)
         // listViewに代入
         listView.adapter = adapter
+        // 長押しイベント付与
+        listView.setOnItemLongClickListener { parent, view, position, id ->
+            // 対象セルの文字列表示
+            val listView: ListView = parent as ListView
+            val str = listView.getItemAtPosition(position) as String
+            Toast.makeText(activity!!.applicationContext, "$str", Toast.LENGTH_LONG).show()
+            true
+        }
     }
 
     /**
