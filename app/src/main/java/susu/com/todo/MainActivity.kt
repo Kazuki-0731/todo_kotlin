@@ -1,26 +1,19 @@
 package susu.com.todo
 
 import android.animation.Animator
-import android.animation.AnimatorInflater
-import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import androidx.core.content.res.ResourcesCompat
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-
 import kotlinx.android.synthetic.main.activity_main.*
 import susu.com.todo.mdoel.action.SharedPref
 import susu.com.todo.mdoel.database.DBHelper
 import susu.com.todo.mdoel.entities.DataModel
+import susu.com.todo.view.animation.Floating
 import susu.com.todo.view.common.FrontConst
 import susu.com.todo.view.util.InputTextDialog
 import susu.com.todo.view.fragment.TodoFragment
@@ -54,14 +47,8 @@ class MainActivity : AppCompatActivity() {
     // Todo一覧のインスタンスを保持
     private lateinit var todoFragment: TodoFragment
 
-    // アニメーション定数
-    enum class FloatingActionState {
-        NORMAL,
-        ANIMATED
-    }
-
     // アニメーションプロパティ
-    private lateinit var state: FloatingActionState
+    private lateinit var state: Floating.FloatingActionState
     private lateinit var openingAnimation: Animator
     private lateinit var closingAnimation: Animator
 
@@ -70,6 +57,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        // appContextを保持
+        ContextStateful.onCreateApplication(this)
 
         // Todoフラグメント初期化
         todoFragment = TodoFragment()
@@ -88,11 +78,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         // アニメーションの状態初期化
-        state = FloatingActionState.NORMAL
+        state = Floating.FloatingActionState.NORMAL
+        Floating.state = Floating.FloatingActionState.NORMAL
 
         // アニメーションオブジェクト生成
-        openingAnimation = createOpenFloatingActionButton()
-        closingAnimation = createCloseFloatingActionButton()
+        openingAnimation = Floating().createOpenFloatingActionButton()
+        closingAnimation = Floating().createCloseFloatingActionButton()
 
         // 設定値から読み出して初期表示
         switchFilterIcon(shapre, true)
@@ -111,9 +102,11 @@ class MainActivity : AppCompatActivity() {
         // 右下のTODO追加ボタン押下処理
         fab_add.setOnClickListener { view ->
             // 回転
-            if (state == FloatingActionState.NORMAL && !openingAnimation.isRunning) {
+            if (Floating.state == Floating.FloatingActionState.NORMAL && !openingAnimation.isRunning) {
                 openFloatingActionButton()
             }
+            Log.d("debug", "Floating.openingAnimation.isRunning : ".plus(openingAnimation.isRunning))
+            Log.d("debug", "FloatingFloating.state : ".plus(Floating.state))
 
             // ダイアログ生成
             val dialog = InputTextDialog(context)
@@ -191,7 +184,7 @@ class MainActivity : AppCompatActivity() {
                         // ListViewリロード
                         todoFragment.reload(context, dbhelper)
                         // 逆回転
-                        if (state == FloatingActionState.ANIMATED && !closingAnimation.isRunning) {
+                        if (Floating.state == Floating.FloatingActionState.ANIMATED && !closingAnimation.isRunning) {
                             closeFloatingActionFragment()
                         }
                         // Dialogを閉じる
@@ -203,7 +196,7 @@ class MainActivity : AppCompatActivity() {
             // キャンセルボタン
             dialog.onCancelClickListener = DialogInterface.OnClickListener { _, _ ->
                 // 逆回転
-                if (state == FloatingActionState.ANIMATED && !closingAnimation.isRunning) {
+                if (Floating.state == Floating.FloatingActionState.ANIMATED && !closingAnimation.isRunning) {
                     closeFloatingActionFragment()
                 }
             }
@@ -272,49 +265,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    /**
-     * ------------------------------------------------------------------------------------
-     * 右下のアイコン(FloatingActionButton)のアニメーション処理
-     * ここのアニメーションの部分はMainActivityから切り離したい
-     * アニメーション管理クラスを作成するかも?
-     * ------------------------------------------------------------------------------------
-     */
-    // 開く動作オブジェクト
-    private fun createOpenFloatingActionButton(): Animator {
-        val anim = AnimatorInflater.loadAnimator(applicationContext, R.animator.fab_open)
-        anim.setTarget(fab_add)
-        anim.interpolator = DecelerateInterpolator()
-        anim.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
-                state = FloatingActionState.ANIMATED
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-                animation?.end()
-                state = FloatingActionState.ANIMATED
-            }
-        })
-        return anim
-    }
-
-    // 閉じる動作オブジェクト
-    private fun createCloseFloatingActionButton(): Animator {
-        val anim = AnimatorInflater.loadAnimator(applicationContext, R.animator.fab_close)
-        anim.setTarget(fab_add)
-        anim.interpolator = AccelerateInterpolator()
-        anim.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
-                state = FloatingActionState.NORMAL
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-                animation?.end()
-                state = FloatingActionState.NORMAL
-            }
-        })
-        return anim
     }
 
     // 開くアニメーション
