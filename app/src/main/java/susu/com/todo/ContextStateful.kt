@@ -2,7 +2,8 @@ package susu.com.todo
 
 import androidx.appcompat.app.AppCompatActivity
 
-class ContextStateful constructor(applicationContext: AppCompatActivity) {
+// シングルトンなContextカスタムクラス
+class ContextStateful {
     // static領域
     companion object {
         // 遅延宣言
@@ -15,9 +16,5 @@ class ContextStateful constructor(applicationContext: AppCompatActivity) {
         fun getInstance(): AppCompatActivity {
             return instance
         }
-    }
-    // クラス宣言時の初期化処理
-    init {
-        instance = applicationContext
     }
 }
