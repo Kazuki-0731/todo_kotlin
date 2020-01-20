@@ -35,8 +35,8 @@ class TodoFragment  : Fragment() {
         var dataArray: Array<String> = arrayOf()
         // DB初期化
         val dbhelper = DBHelper(activity!!.applicationContext)
-        // DBから取得
-        if(dbhelper.getCountID() != 0){
+        // DBから
+        if(dbhelper.getMaxID() != 0){
             dataArray = dbhelper.selectTODO()
         }
         // Adapter生成

@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var todoFragment: TodoFragment
 
     // アニメーションプロパティ
-    private lateinit var state: Floating.FloatingActionState
+    private lateinit var floating : Floating
     private lateinit var openingAnimation: Animator
     private lateinit var closingAnimation: Animator
 
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         // appContextを保持
-        ContextStateful.onCreateApplication(this)
+        floating = Floating(this)
 
         // Todoフラグメント初期化
         todoFragment = TodoFragment()
@@ -78,12 +78,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         // アニメーションの状態初期化
-        state = Floating.FloatingActionState.NORMAL
         Floating.state = Floating.FloatingActionState.NORMAL
 
         // アニメーションオブジェクト生成
-        openingAnimation = Floating().createOpenFloatingActionButton()
-        closingAnimation = Floating().createCloseFloatingActionButton()
+        openingAnimation = floating.createOpenFloatingActionButton()
+        closingAnimation = floating.createCloseFloatingActionButton()
 
         // 設定値から読み出して初期表示
         switchFilterIcon(shapre, true)
@@ -124,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                  * 100件目まで登録可能
                  * 101件からは登録できない
                  */
-                if(dbhelper.getCountID() >= FrontConst.Limit.LISTVIEW_REGISTER_LIMIT.value){
+                if(dbhelper.getMaxID() >= FrontConst.Limit.LISTVIEW_REGISTER_LIMIT.value){
                     // ダイアログを閉じないで新規ダイアログ表示
                     val warningDialog = InputTextDialog(context)
                     warningDialog.dialogTitle = "⚠️ 警告 ⚠️"
@@ -172,7 +171,7 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         // DBに保存
                         val todoRecord = DataModel(
-                            dbhelper.getCountID(),
+                            dbhelper.getMaxID(),
                             textData,
                             FrontConst.Init.INITIAL_VALUE_OF_STATUS_WHEN_TODO_IS_ADDED.value // 初期値をInactive(0)とする
                         )

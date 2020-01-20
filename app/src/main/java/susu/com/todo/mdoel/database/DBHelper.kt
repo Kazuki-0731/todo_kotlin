@@ -30,7 +30,7 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
         val db = writableDatabase
         val values = ContentValues()
         try {
-            values.put(DBConstruct.DataEntry.ID, dataModel.id)
+//            values.put(DBConstruct.DataEntry.ID, dataModel.id)
             values.put(DBConstruct.DataEntry.TODO_NAME, dataModel.todoList)
             values.put(DBConstruct.DataEntry.STATUS, dataModel.status)
             db.insert(DBConstruct.DataEntry.TABLE_NAME, null, values)
@@ -100,16 +100,17 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
     }
 
     /**
-     * レコード数を取得する
+     * レコードの最大値を取得する
      */
-    fun getCountID() : Int {
+    fun getMaxID() : Int {
         val db = writableDatabase
         var result = 0
         try {
             // クエリ
-            val cursor = db.rawQuery(SQL_COUNT_TODOS, null)
+            val cursor = db.rawQuery(SQL_MAX_TODO, null)
             cursor.moveToFirst()
-            result = cursor.getInt(cursor.getColumnIndex("cnt"))
+            result = cursor.getInt(cursor.getColumnIndex("max"))
+            Log.d("debug", "getMaxID().result : ".plus(result))
         } catch (e: Exception) {
             // エラー内容をLog出力
             Log.d("debug", "select Error")
@@ -185,7 +186,7 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
         var result = 0
         try {
             // クエリ
-            val cursor = db.rawQuery(SQL_STATUS_TODOS, arrayOf(id))
+            val cursor = db.rawQuery(SQL_STATUS_TODO, arrayOf(id))
             cursor.moveToFirst()
             result = cursor.getInt(cursor.getColumnIndex(DBConstruct.DataEntry.STATUS))
         } catch (e: Exception) {
@@ -245,12 +246,12 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        db?.execSQL(SQL_CREATE_TODOS)
+        db?.execSQL(SQL_CREATE_TODO)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL(SQL_DELETE_TODOS)
-        db?.execSQL(SQL_CREATE_TODOS)
+        db?.execSQL(SQL_DELETE_TODO)
+        db?.execSQL(SQL_CREATE_TODO)
     }
 
     override fun onDowngrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -265,27 +266,27 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
         /**
          * テーブル生成
          */
-        private const val SQL_CREATE_TODOS =
+        private const val SQL_CREATE_TODO =
             "CREATE TABLE " + DBConstruct.DataEntry.TABLE_NAME + " (" +
-                    DBConstruct.DataEntry.ID + " INTEGER ," +
+                    DBConstruct.DataEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     DBConstruct.DataEntry.TODO_NAME + " TEXT ," +
                     DBConstruct.DataEntry.STATUS + " INTEGER)"
         /**
-         * idをcountしてレコード数を取得
+         * idのMAXから最大値を取得
          */
-        private const val SQL_COUNT_TODOS =  "SELECT " +
-                "count(" + DBConstruct.DataEntry.ID + ") as cnt" +
+        private const val SQL_MAX_TODO =  "SELECT " +
+                "MAX(" + DBConstruct.DataEntry.ID + ") as max" +
                 " FROM " + DBConstruct.DataEntry.TABLE_NAME
         /**
          * idを指定して対象レコードのStatusを取得
          */
-        private const val SQL_STATUS_TODOS =  "SELECT " +
+        private const val SQL_STATUS_TODO =  "SELECT " +
                 DBConstruct.DataEntry.STATUS +
                 " FROM " + DBConstruct.DataEntry.TABLE_NAME +
                 " WHERE " + DBConstruct.DataEntry.ID + " = ?"
         /**
          * 削除
          */
-        private const val SQL_DELETE_TODOS = "DROP TABLE IF EXISTS " + DBConstruct.DataEntry.TABLE_NAME
+        private const val SQL_DELETE_TODO = "DROP TABLE IF EXISTS " + DBConstruct.DataEntry.TABLE_NAME
     }
 }

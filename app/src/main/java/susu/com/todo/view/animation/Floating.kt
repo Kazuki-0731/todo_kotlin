@@ -3,10 +3,8 @@ package susu.com.todo.view.animation
 import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.animation.AnimatorListenerAdapter
-import android.util.Log
+import android.app.Activity
 import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
-import susu.com.todo.ContextStateful
 import susu.com.todo.R
 
 /**
@@ -16,7 +14,7 @@ import susu.com.todo.R
  * Floatingアイコンの動作管理クラス
  * ------------------------------------------------------------------------------------
  */
-class Floating {
+class Floating (context: Activity){
     // アニメーション定数
     enum class FloatingActionState {
         NORMAL,
@@ -27,14 +25,20 @@ class Floating {
     companion object {
         // 動作状態
         var state: FloatingActionState = FloatingActionState.NORMAL
+        // Context
+        lateinit var statefulActivity : Activity
+    }
+
+    init {
+        statefulActivity = context
     }
 
     // 開く動作オブジェクト
     fun createOpenFloatingActionButton() : Animator {
         // [fab_open]にオブジェクト注入
-        return AnimatorInflater.loadAnimator(ContextStateful.getInstance(), R.animator.fab_open).apply {
+        return AnimatorInflater.loadAnimator(statefulActivity, R.animator.fab_open).apply {
             // [fab_add]に対して埋め込み
-            setTarget(ContextStateful.getInstance().findViewById(R.id.fab_add))
+            setTarget(statefulActivity.findViewById(R.id.fab_add))
             // 加速動作
             interpolator = AccelerateInterpolator()
             // アニメーション中のイベント受信
@@ -53,9 +57,9 @@ class Floating {
     // 閉じる動作オブジェクト
     fun createCloseFloatingActionButton() : Animator {
         // [fab_open]にオブジェクト注入
-        return AnimatorInflater.loadAnimator(ContextStateful.getInstance(), R.animator.fab_close).apply {
+        return AnimatorInflater.loadAnimator(statefulActivity, R.animator.fab_close).apply {
             // [fab_add]に対して埋め込み
-            setTarget(ContextStateful.getInstance().findViewById(R.id.fab_add))
+            setTarget(statefulActivity.findViewById(R.id.fab_add))
             // 加速動作
             interpolator = AccelerateInterpolator()
             // アニメーション中のイベント受信
