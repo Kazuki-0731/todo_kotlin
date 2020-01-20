@@ -30,7 +30,6 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
         val db = writableDatabase
         val values = ContentValues()
         try {
-//            values.put(DBConstruct.DataEntry.ID, dataModel.id)
             values.put(DBConstruct.DataEntry.TODO_NAME, dataModel.todoList)
             values.put(DBConstruct.DataEntry.STATUS, dataModel.status)
             db.insert(DBConstruct.DataEntry.TABLE_NAME, null, values)
