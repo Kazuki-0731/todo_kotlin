@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import susu.com.todo.mdoel.action.SharedPref
+import susu.com.todo.mdoel.dictionary.SharedPref
 import susu.com.todo.mdoel.entities.DataModel
 import susu.com.todo.view.common.FrontConst
 import java.lang.Exception

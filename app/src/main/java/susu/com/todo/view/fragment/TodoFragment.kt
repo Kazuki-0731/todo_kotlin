@@ -19,13 +19,25 @@ import susu.com.todo.view.util.TodoListAdapter
 /**
  * ListViewのFragment
  */
-class TodoFragment  : Fragment() {
+class TodoFragment : Fragment() {
+
+    // 静的領域
+    companion object {
+        // 遅延宣言
+        private var instance: TodoFragment = TodoFragment()
+        // シングルトンなインスタンス取得
+        fun getInstance(): TodoFragment {
+            return instance
+        }
+    }
 
     private var adapter : TodoListAdapter? = null
 
     // Fragment生成
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        // 再描画防止(onCreateは1度しか呼ばれない)
+        retainInstance = true
         return inflater.inflate(R.layout.content_main, container, false)
     }
 

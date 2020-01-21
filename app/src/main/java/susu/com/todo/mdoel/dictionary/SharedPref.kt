@@ -1,4 +1,4 @@
-package susu.com.todo.mdoel.action
+package susu.com.todo.mdoel.dictionary
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -3,6 +3,7 @@ package susu.com.todo
 import android.animation.Animator
 import android.content.Context
 import android.content.DialogInterface
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.snackbar.Snackbar
@@ -10,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import kotlinx.android.synthetic.main.activity_main.*
-import susu.com.todo.mdoel.action.SharedPref
+import susu.com.todo.mdoel.dictionary.SharedPref
 import susu.com.todo.mdoel.database.DBHelper
 import susu.com.todo.mdoel.entities.DataModel
 import susu.com.todo.view.animation.Floating
@@ -44,9 +45,6 @@ import susu.com.todo.view.fragment.TodoFragment
 class MainActivity : AppCompatActivity() {
     private val context : Context = this
 
-    // Todo一覧のインスタンスを保持
-    private lateinit var todoFragment: TodoFragment
-
     // アニメーションプロパティ
     private lateinit var floating : Floating
     private lateinit var openingAnimation: Animator
@@ -61,9 +59,6 @@ class MainActivity : AppCompatActivity() {
         // appContextを保持
         floating = Floating(this)
 
-        // Todoフラグメント初期化
-        todoFragment = TodoFragment()
-
         // DBHelperクラス初期化
         val dbhelper = DBHelper(this)
 
@@ -73,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         // Fragment生成
         if (savedInstanceState == null) {
             val transaction = supportFragmentManager.beginTransaction()
-            transaction.add(R.id.container, todoFragment)
+            transaction.add(R.id.container, TodoFragment.getInstance())
             transaction.commit()
         }
 
@@ -95,7 +90,7 @@ class MainActivity : AppCompatActivity() {
             // 設定値から読み出して表示切替
             switchFilterIcon(shapre, false)
             // ListViewリロード
-            todoFragment.reload(context, dbhelper)
+            TodoFragment.getInstance().reload(context, dbhelper)
         }
 
         // 右下のTODO追加ボタン押下処理
@@ -181,7 +176,7 @@ class MainActivity : AppCompatActivity() {
                         Snackbar.make(view,"$textData をTODOリストへ追加しました", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show()
                         // ListViewリロード
-                        todoFragment.reload(context, dbhelper)
+                        TodoFragment.getInstance().reload(context, dbhelper)
                         // 逆回転
                         if (Floating.state == Floating.FloatingActionState.ANIMATED && !closingAnimation.isRunning) {
                             closeFloatingActionFragment()
