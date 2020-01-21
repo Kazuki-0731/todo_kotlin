@@ -52,7 +52,7 @@ class TodoFragment : Fragment() {
             dataArray = dbhelper.selectTODO()
         }
         // Adapter生成
-        adapter = TodoListAdapter(activity!!.applicationContext, dataArray, this)
+        adapter = TodoListAdapter(activity!!.applicationContext, dataArray)
         // listViewに代入
         listView.adapter = adapter
         // 長押しイベント付与
@@ -73,8 +73,8 @@ class TodoFragment : Fragment() {
         var dataArray = db.selectTODO()
 
         // adapterセット
-        adapter = TodoListAdapter(context, dataArray, this)
-        adapter!!.notifyDataSetChanged()
+        adapter = TodoListAdapter(context, dataArray)
         listView.adapter = adapter
+        adapter!!.notifyDataSetChanged()
     }
 }

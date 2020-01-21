@@ -17,10 +17,10 @@ import susu.com.todo.mdoel.database.DBHelper
 import susu.com.todo.view.fragment.TodoFragment
 
 class TodoListAdapter(private val context: Context,
-                      private val sortedList: Array<String>,
-                      private val fragment: TodoFragment
+                      private val sortedList: Array<String>
 ) : BaseAdapter() {
     private val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
 
     override fun getCount(): Int {
         return sortedList.count()
@@ -36,11 +36,14 @@ class TodoListAdapter(private val context: Context,
 
     @SuppressLint("ViewHolder", "SetTextI18n")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        // 表示するレイアウト取得
-        val view = layoutInflater.inflate(R.layout.todo_list_item, parent, false)
+        var view = convertView
+        if(convertView == null){
+            // 表示するレイアウト取得
+            view = layoutInflater.inflate(R.layout.todo_list_item, parent, false)
+        }
 
         //各TextView
-        val todoText = view.findViewById<TextView>(R.id.todo_text)
+        val todoText = view!!.findViewById<TextView>(R.id.todo_text)
         todoText.text = sortedList[position]
 
         /**
@@ -62,7 +65,7 @@ class TodoListAdapter(private val context: Context,
                 dbhelper.updateState(allIdList[position], DBConstruct.CheckStatus.INACTIVE.status.toString())
             }
             // listViewリロード
-            fragment.reload(context, dbhelper)
+            TodoFragment.getInstance().reload(context, dbhelper)
         }
 
         /**
@@ -84,11 +87,11 @@ class TodoListAdapter(private val context: Context,
                 // 対象レコードの削除実行
                 dbhelper.deleteRecord(allIdList[position])
                 // listViewリロード
-                fragment.reload(context, dbhelper)
+                TodoFragment.getInstance().reload(context, dbhelper)
             }
             warningDialog.isCancelButton = true
             // ダイアログ表示
-            warningDialog.openDialog(fragment.fragmentManager!!)
+            warningDialog.openDialog(TodoFragment.getInstance().fragmentManager!!)
         }
 
         /**
