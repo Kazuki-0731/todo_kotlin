@@ -3,7 +3,6 @@ package susu.com.todo
 import android.animation.Animator
 import android.content.Context
 import android.content.DialogInterface
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.snackbar.Snackbar
