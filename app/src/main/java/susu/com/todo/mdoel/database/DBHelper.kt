@@ -48,11 +48,11 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
      */
     fun selectTODO() : Array<String> {
         val db = writableDatabase
-        val shapre = SharedPref(context)
+        val shapre = SharedPref.getInstance()
         var mutableList : MutableList<String> = mutableListOf()
         try {
             var cursor : Cursor
-            if(FrontConst.SharedPref.ALL_TODO_LIST.value == shapre.listActiveSwitch){
+            if(FrontConst.SharedPref.ALL_TODO_LIST.value == shapre!!.listActiveSwitch){
                 // クエリ
                 cursor = db.query(
                     DBConstruct.DataEntry.TABLE_NAME,
@@ -63,7 +63,7 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
                     null,
                     DBConstruct.DataEntry.ID + " ASC",
                     null)
-            } else {
+        } else {
                 var status = ""
                 // 表示用設定値 -> フラグ
                 if(FrontConst.SharedPref.ACTIVE_TODO_LIST.value == shapre.listActiveSwitch){
@@ -126,11 +126,11 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
      */
     fun getAllID() : Array<String> {
         val db = writableDatabase
-        val shapre = SharedPref(context)
+        val shapre = SharedPref.getInstance()
         var mutableList : MutableList<String> = mutableListOf()
         try {
             var cursor : Cursor
-            if(FrontConst.SharedPref.ALL_TODO_LIST.value == shapre.listActiveSwitch){
+            if(FrontConst.SharedPref.ALL_TODO_LIST.value == shapre!!.listActiveSwitch){
                 // クエリ
                 cursor = db.query(
                     DBConstruct.DataEntry.TABLE_NAME,
@@ -287,5 +287,23 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
          * 削除
          */
         private const val SQL_DELETE_TODO = "DROP TABLE IF EXISTS " + DBConstruct.DataEntry.TABLE_NAME
+
+        // 遅延宣言
+        private lateinit var statefulContext : Context
+        private var instance: DBHelper? = null
+        // シングルトンなインスタンス取得
+        @get:Synchronized
+        val getInstance: DBHelper?
+            // インスタンス取得
+            get() {
+                if (instance == null) {
+                    instance = DBHelper(statefulContext)
+                }
+                return instance
+            }
+    }
+
+    init {
+        statefulContext = context
     }
 }

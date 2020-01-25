@@ -15,6 +15,21 @@ import kotlin.reflect.KProperty
  */
 class SharedPref(context: Context) {
 
+    // static領域
+    companion object {
+        // 遅延宣言
+        private lateinit var statefulContext : Context
+        private var instance: SharedPref? = null
+        // シングルトンなインスタンス取得
+        fun getInstance() = instance ?: synchronized(this) {
+            instance ?: SharedPref(statefulContext).also { instance = it }
+        }
+    }
+
+    init {
+        statefulContext = context
+    }
+
     private val appPref: SharedPreferences = context.getSharedPreferences("app_pref", Context.MODE_PRIVATE)
 
     // listActiveSwitchへの読み書きがそのまま SharedPreferences への読み書きになる

@@ -21,7 +21,6 @@ class TodoListAdapter(private val context: Context,
 ) : BaseAdapter() {
     private val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-
     override fun getCount(): Int {
         return sortedList.count()
     }

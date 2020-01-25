@@ -15,12 +15,6 @@ import susu.com.todo.R
  * ------------------------------------------------------------------------------------
  */
 class Floating (context: Activity){
-    // アニメーション定数
-    enum class FloatingActionState {
-        NORMAL,
-        ANIMATED
-    }
-
     // 静的領域
     companion object {
         // 動作状態
@@ -33,6 +27,12 @@ class Floating (context: Activity){
         statefulActivity = context
     }
 
+    // アニメーション定数
+    enum class FloatingActionState {
+        NORMAL,
+        ANIMATED
+    }
+    
     // 開く動作オブジェクト
     fun createOpenFloatingActionButton() : Animator {
         // [fab_open]にオブジェクト注入
