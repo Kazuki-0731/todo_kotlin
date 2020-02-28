@@ -18,6 +18,9 @@ import susu.com.todo.view.common.FrontConst
 import susu.com.todo.view.fragment.TodoFragment
 import susu.com.todo.view.util.InputTextDialog
 
+/**
+ * Controller側は殆どリスナーの処理を記述する
+ */
 class UserIO (activity: Activity, fragmentManager: FragmentManager) {
     // アニメーションプロパティ
     private lateinit var floating : Floating
@@ -26,7 +29,6 @@ class UserIO (activity: Activity, fragmentManager: FragmentManager) {
 
     // static領域
     companion object {
-        // Activity
         lateinit var statefulActivity : Activity
         lateinit var statefulFragment : FragmentManager
     }
@@ -179,7 +181,6 @@ class UserIO (activity: Activity, fragmentManager: FragmentManager) {
      * アニメーション管理クラスを作成するかも?
      * ------------------------------------------------------------------------------------
      */
-    //region
     private fun switchFilterIcon(shapre : SharedPref?, init : Boolean){
         /**
          * 設定値から読み出して表示切替

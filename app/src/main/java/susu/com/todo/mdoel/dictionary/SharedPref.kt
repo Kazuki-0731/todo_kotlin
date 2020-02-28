@@ -42,6 +42,7 @@ class SharedPref(context: Context) {
      */
     private fun <T : Any> pref(default: T) = object : ReadWriteProperty<SharedPref, T> {
 
+        // getter
         @Suppress("UNCHECKED_CAST")
         override fun getValue(thisRef: SharedPref, property: KProperty<*>): T {
             val key = property.name
@@ -51,6 +52,7 @@ class SharedPref(context: Context) {
             }
         }
 
+        // setter
         override fun setValue(thisRef: SharedPref, property: KProperty<*>, value: T) {
             val key = property.name
             put(key, value)
@@ -62,12 +64,14 @@ class SharedPref(context: Context) {
      */
     private fun <T : Any?> nullablePref() = object : ReadWriteProperty<SharedPref, T?> {
 
+        // getter
         @Suppress("UNCHECKED_CAST")
         override fun getValue(thisRef: SharedPref, property: KProperty<*>): T? {
             val key = property.name
             return appPref.all[key] as? T?
         }
 
+        // setter
         override fun setValue(thisRef: SharedPref, property: KProperty<*>, value: T?) {
             val key = property.name
             put(key, value)
@@ -78,7 +82,9 @@ class SharedPref(context: Context) {
      * sharedPrefで保存
      */
     private fun <T : Any?> put(key: String, value: T?) {
+        // 保存用
         val editor = appPref.edit()
+        // 型によって分岐
         when (value) {
             is Int -> editor.putInt(key, value)
             is Long -> editor.putLong(key, value)

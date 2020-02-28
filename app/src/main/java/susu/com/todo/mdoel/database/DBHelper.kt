@@ -61,9 +61,9 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
                     null,
                     null,
                     null,
-                    DBConstruct.DataEntry.ID + " ASC",
+                    DBConstruct.DataEntry.ID + " DESC",
                     null)
-        } else {
+            } else {
                 var status = ""
                 // 表示用設定値 -> フラグ
                 if(FrontConst.SharedPref.ACTIVE_TODO_LIST.value == shapre.listActiveSwitch){
@@ -79,7 +79,7 @@ class DBHelper(val context: Context) : SQLiteOpenHelper(
                     arrayOf(status),
                     null,
                     null,
-                    DBConstruct.DataEntry.ID + " ASC",
+                    DBConstruct.DataEntry.ID + " DESC",
                     null)
             }
             // 全データ配列化
