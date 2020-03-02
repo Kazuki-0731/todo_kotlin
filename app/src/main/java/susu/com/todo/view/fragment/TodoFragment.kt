@@ -31,9 +31,10 @@ class TodoFragment : Fragment() {
         }
     }
 
+    // リストAdapterのメンバ変数
     private var adapter : TodoListAdapter? = null
 
-    // Fragment生成
+    // View生成前
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // 再描画防止(onCreateは1度しか呼ばれない)
